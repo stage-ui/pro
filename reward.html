@@ -700,6 +700,18 @@
             .stats-grid {
                 width: 100%;
                 justify-content: center;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .stat-box {
+                flex: 1;
+                min-width: 100px;
+                padding: 12px 15px;
+            }
+
+            .stat-value {
+                font-size: 1.4rem;
             }
 
             .filter-section {
@@ -722,6 +734,21 @@
 
             .products-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .stat-box {
+                min-width: auto;
+                padding: 10px;
+            }
+            .stat-value {
+                font-size: 1.2rem;
+            }
+            .stat-label {
+                font-size: 0.75rem;
             }
         }
     </style>
