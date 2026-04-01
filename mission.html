@@ -232,6 +232,16 @@
             .xp-display {
                 padding: 6px 12px;
             }
+            
+            .page-header {
+                padding-top: 150px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                padding-top: 130px;
+            }
         }
 
         .mission-card {
@@ -710,12 +720,10 @@
                 <span class="xp-icon">⭐</span>
                 <span class="xp-value" id="headerXp">0</span>
             </div>
-            
-            <button onclick="logout()" style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem;">🚪 Logout</button>
         </div>
     </header>
 
-    <section class="page-header">
+    <section class="page-header" style="padding-top: 120px;">
         <h1 class="page-title" id="pageTitle">🎯 Mission Board</h1>
         
         <div class="level-bar-section">
