@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Performance - STAGE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4B1E83;
+            --background: #5A2AA3;
+            --accent: #0D10DD;
+            --white: #FFFFFF;
+            --gradient-start: #5A2AA3;
+            --gradient-end: #4B1E83;
+            --gold: #FFD700;
+            --like-color: #ff4757;
+            --success: #4CAF50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            color: var(--white);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Scroll Snap Container */
+        .scroll-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: linear-gradient(180deg, rgba(75, 30, 131, 0.95) 0%, rgba(75, 30, 131, 0.7) 100%);
+            backdrop-filter: blur(10px);
+            padding: 12px 0;
+        }
+
+        .header-content {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 28px;
+        }
+
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn:hover { background: rgba(255, 255, 255, 0.2); }
+        .menu-btn span { width: 18px; height: 2px; background: var(--white); border-radius: 1px; }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 20px;
+            background: rgba(75, 30, 131, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 10px;
+            display: none;
+            min-width: 180px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 200;
+        }
+
+        .dropdown-menu.show { display: block; }
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 18px;
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 280px;
+            margin: 0 25px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: var(--white);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            margin-left: 18px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after, nav a.active::after {
+            width: 100%;
+        }
+
+        /* Video Page - Each video is a full snap page */
+        .video-page {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Background */
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            z-index: -1;
+        }
+
+        .video-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 35%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--gradient-end), transparent);
+            filter: blur(30px);
+        }
+
+        .video-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 35%;
+            height: 100%;
+            background: linear-gradient(270deg, var(--gradient-start), transparent);
+            filter: blur(30px);
+        }
+
+        /* Video Content Layout */
+        .video-content {
+            position: relative;
+            width: 380px;
+            aspect-ratio: 9/16;
+            max-height: calc(100vh - 80px);
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            flex-shrink: 0;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        .video-element {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(75, 30, 131, 0.3) 0%, 
+                transparent 30%, 
+                transparent 70%, 
+                rgba(0, 0, 0, 0.6) 100%);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* Broadway Stage Visualization */
+        .stage-visual {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stage-lights {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            height: 200px;
+            background: radial-gradient(ellipse at center, rgba(255, 200, 100, 0.4) 0%, transparent 70%);
+            animation: lightsFlicker 3s ease-in-out infinite;
+        }
+
+        @keyframes lightsFlicker {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .spotlight-beam {
+            position: absolute;
+            top: 0;
+            width: 60px;
+            height: 70%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);
+        }
+
+        .spotlight-beam:nth-child(1) { left: 25%; transform: rotate(-8deg); }
+        .spotlight-beam:nth-child(2) { left: 45%; }
+        .spotlight-beam:nth-child(3) { right: 25%; transform: rotate(8deg); }
+
+        .performer-figure {
+            position: absolute;
+            bottom: 15%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: performerDance 2s ease-in-out infinite;
+        }
+
+        @keyframes performerDance {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+
+        .performer-body {
+            width: 50px;
+            height: 100px;
+            background: linear-gradient(180deg, #3d3d5c, #2d2d44);
+            border-radius: 25px 25px 10px 10px;
+        }
+
+        .performer-head {
+            width: 35px;
+            height: 35px;
+            background: #3d3d5c;
+            border-radius: 50%;
+            margin-bottom: -5px;
+        }
+
+        .video-title-display {
+            position: absolute;
+            bottom: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            z-index: 5;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 20;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .play-button.show {
+            opacity: 1;
+        }
+
+        .play-button .pause-icon {
+            width: 8px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .play-button.playing .pause-icon {
+            width: 24px;
+            height: 28px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .play-button.playing .pause-icon::before,
+        .play-button.playing .pause-icon::after {
+            content: '';
+            width: 8px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .video-wrapper {
+            cursor: pointer;
+        }
+
+        .play-button:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .play-button.playing {
+            width: 50px;
+            height: 50px;
+            font-size: 1.3rem;
+        }
+
+        /* Right Side Actions */
+        .action-column {
+            position: absolute;
+            right: 15px;
+            bottom: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            z-index: 30;
+        }
+
+        /* For mobile */
+        @media (max-width: 480px) {
+            .action-column {
+                right: 10px;
+            }
+        }
+
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .action-item:hover {
+            transform: scale(1.1);
+        }
+
+        .action-circle {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .action-item:hover .action-circle {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .action-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        /* User Profile with Follow */
+        .profile-wrapper {
+            position: relative;
+        }
+
+        .profile-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #feca57, #48dbfb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .follow-icon {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            border: 2px solid var(--white);
+        }
+
+        .action-item.following .follow-icon {
+            background: var(--success);
+        }
+
+        /* Like */
+        .action-item.liked .action-circle {
+            background: var(--like-color);
+            border-color: var(--like-color);
+            animation: likePulse 0.3s ease;
+        }
+
+        @keyframes likePulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.25); }
+            100% { transform: scale(1); }
+        }
+
+        /* Share */
+        .share-hover {
+            position: absolute;
+            right: 55px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 8px 10px;
+            border-radius: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .action-item:hover .share-hover {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .share-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+
+        .share-icon.ig { background: linear-gradient(45deg, #f09433, #dc2743); }
+        .share-icon.tt { background: #000; border: 1px solid #fff; }
+
+        /* Audio Disc */
+        .audio-disc {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a1a2e, #2d2d44);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: discSpin 3s linear infinite;
+            position: relative;
+        }
+
+        .audio-disc::before {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent), 0 0 15px var(--accent);
+        }
+
+        .audio-disc::after {
+            content: '♫';
+            font-size: 0.9rem;
+            z-index: 1;
+        }
+
+        @keyframes discSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Bottom Info */
+        .info-overlay {
+            position: absolute;
+            bottom: 25px;
+            left: 25px;
+            right: 80px;
+            max-width: 280px;
+            z-index: 30;
+        }
+
+        .info-overlay::before {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -10px;
+            right: -10px;
+            height: 150%;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.75) 100%);
+            border-radius: 0 0 12px 12px;
+            z-index: -1;
+        }
+
+        .user-handle {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .caption-text {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .more-link {
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+        }
+
+        .more-link:hover {
+            color: var(--white);
+        }
+
+        .audio-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            opacity: 0.9;
+        }
+
+        .audio-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            animation: audioScroll 10s linear infinite;
+        }
+
+        @keyframes audioScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Comment Sidebar */
+        .comment-panel {
+            position: fixed;
+            right: -380px;
+            top: 0;
+            width: 380px;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(75, 30, 131, 0.98) 0%, rgba(90, 42, 163, 0.98) 100%);
+            backdrop-filter: blur(20px);
+            padding: 70px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 600;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comment-panel.open {
+            right: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            width: 34px;
+            height: 34px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: var(--white);
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .comment-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .comment-box input {
+            flex: 1;
+            padding: 11px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 22px;
+            color: var(--white);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .comment-box input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .comment-box button {
+            padding: 11px 18px;
+            background: var(--accent);
+            border: none;
+            border-radius: 22px;
+            color: var(--white);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .comments-container {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 10px;
+        }
+
+        .comment-avatar {
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, var(--accent), #4FC3F7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .comment-body {
+            flex: 1;
+        }
+
+        .comment-name {
+            font-weight: 600;
+            font-size: 0.88rem;
+            margin-bottom: 2px;
+        }
+
+        .comment-msg {
+            font-size: 0.78rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .comment-time {
+            font-size: 0.62rem;
+            opacity: 0.6;
+            margin-top: 4px;
+        }
+
+        /* Page Indicators */
+        .page-indicators {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 40;
+        }
+
+        .page-dot {
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-dot.active {
+            background: var(--white);
+            width: 20px;
+            border-radius: 3px;
+        }
+
+        /* Notification */
+        .toast-notif {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--success), #45a049);
+            color: var(--white);
+            padding: 11px 18px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 3000;
+            transform: translateX(150%);
+            transition: transform 0.4s ease;
+            font-size: 0.85rem;
+        }
+
+        .toast-notif.show {
+            transform: translateX(0);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .video-page.comments-open .video-content {
+                transform: translateX(-80px);
+            }
+            
+            .comment-panel {
+                width: 320px;
+                right: -320px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header-content {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .search-container {
+                order: 3;
+                max-width: 100%;
+                margin: 8px 0 0;
+            }
+            
+            nav {
+                display: flex;
+                gap: 6px;
+            }
+            
+            nav a {
+                margin-left: 8px;
+                font-size: 0.7rem;
+            }
+            
+            .video-wrapper {
+                width: 100%;
+                max-width: 320px;
+                border-radius: 10px;
+            }
+            
+            .video-content {
+                flex-direction: column;
+                padding-top: 70px;
+            }
+            
+            .action-column {
+                right: 10px;
+                bottom: 90px;
+            }
+            
+            .action-circle {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .info-overlay {
+                left: 15px;
+                right: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo"><img src="logo-stage.webp" alt="STAGE" style="height: 30px;"></a>
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search...">
+            </div>
+            <div style="position: relative;">
+                <button class="menu-btn" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="index.html">🏠 Home</a>
+                    <a href="explore.html">🔍 Explore</a>
+                    <a href="watch.html">🎬 Performance</a>
+                    <a href="reward.html">🏆 Reward</a>
+                    <a href="mission.html">🎯 Mission</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Scroll Container with Snap -->
+    <div class="scroll-container" id="scrollContainer">
+        <!-- Videos generated by JS -->
+    </div>
+
+    <!-- Comment Sidebar -->
+    <div class="comment-panel" id="commentPanel">
+        <div class="panel-header">
+            <span class="panel-title">💬 Comments</span>
+            <button class="close-btn" onclick="toggleComments()">✕</button>
+        </div>
+        <div class="comment-box">
+            <input type="text" id="commentInput" placeholder="Add a comment..." onkeypress="handleEnter(event)">
+            <button onclick="postComment()">Post</button>
+        </div>
+        <div class="comments-container" id="commentsList"></div>
+    </div>
+
+    <!-- Notification -->
+    <div class="toast-notif" id="toast">
+        <span id="toastText">Action completed!</span>
+    </div>
+
+    <script>
+        // Check if logged in
+        if (sessionStorage.getItem('userLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        // Simple sessionStorage initialization - DON'T clear on every page load
+        
+        // Get current XP from sessionStorage (default 0)
+        var currentXP = parseInt(sessionStorage.getItem('currentXP')) || 0;
+        var completedMissions = JSON.parse(sessionStorage.getItem('completedMissions')) || [];
+
+        // Check which mission is active
+        var missionActive = sessionStorage.getItem('missionActive');
+
+        // Sync UI function - update all .xp-count elements
+        function syncUI() {
+            document.querySelectorAll('.xp-count').forEach(function(el) {
+                el.textContent = currentXP;
+            });
+        }
+
+        // Video Data
+        const videos = [
+            {
+                id: 1,
+                title: "Phantom of the Campus",
+                user: "@StageTalentUI",
+                caption: "Incredible performance from the final act of Hamilton! #BroadwayVokasi #STAGEUI",
+                audio: "Original Sound - Alexander Hamilton (STAGE Production)",
+                views: 2453,
+                likes: 892,
+                avatar: "S",
+                videoFile: "video1.webm",
+                comments: [
+                    { user: "Sarah", text: "Amazing performance! 🎭", time: "2h ago" },
+                    { user: "Budi", text: "The vocals are incredible!", time: "5h ago" },
+                    { user: "Lisa", text: "Can't wait for the next show!", time: "1d ago" },
+                    { user: "Rudi", text: "This is so good! 🔥", time: "3h ago" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Garuda Rising",
+                user: "@STAGEDance",
+                caption: "Contemporary dance showcasing Indonesian culture. The choreography is stunning! 💃🇮🇩",
+                audio: "Garuda Rising - Original Score",
+                views: 3124,
+                likes: 1245,
+                avatar: "G",
+                videoFile: "video2.webm",
+                comments: [
+                    { user: "Ari", text: "So beautiful! 🦅", time: "3h ago" },
+                    { user: "Dewi", text: "The choreography is stunning", time: "6h ago" }
+                ]
+            },
+            {
+                id: 3,
+                title: "Laut Bercerita",
+                user: "@STAGEDrama",
+                caption: "A powerful drama exploring Indonesian maritime heritage. Touching story! 🌊",
+                audio: "Laut Bercerita - Original Soundtrack",
+                views: 1892,
+                likes: 654,
+                avatar: "L",
+                videoFile: "video3.webm",
+                comments: [
+                    { user: "Rina", text: "So moving! 😢", time: "4h ago" },
+                    { user: "Joko", text: "Great acting!", time: "8h ago" }
+                ]
+            },
+            {
+                id: 4,
+                title: "Javanese Symphony",
+                user: "@STAGEMusic",
+                caption: "Celebrating Javanese culture through music. Traditional meets modern! 🎵",
+                audio: "Javanese Symphony - Cultural Ensemble",
+                views: 1567,
+                likes: 723,
+                avatar: "J",
+                videoFile: "video4.webm",
+                comments: [
+                    { user: "Wayan", text: "Love the traditional elements!", time: "1d ago" }
+                ]
+            },
+            {
+                id: 5,
+                title: "Freshman Debut 2025",
+                user: "@STAGE2025",
+                caption: "Our newest talents debut! Watch these future stars shine! ⭐🌟",
+                audio: "Freshman Anthem - Class 2025",
+                views: 2891,
+                likes: 1102,
+                avatar: "F",
+                videoFile: "video5.webm",
+                comments: [
+                    { user: "Tono", text: "Great potential! 🌟", time: "2d ago" }
+                ]
+            },
+            {
+                id: 6,
+                title: "Midnight Sonnets",
+                user: "@STAGETheatre",
+                caption: "Shakespeare adapted for modern stage. Classic never gets old! 📚🎭",
+                audio: "Midnight Sonnets - Classical Mix",
+                views: 987,
+                likes: 432,
+                avatar: "M",
+                videoFile: "video1.webm",
+                comments: [
+                    { user: "Bayu", text: "Classic! 📚", time: "3d ago" }
+                ]
+            }
+        ];
+
+        // State
+        let currentVideo = 0;
+        let isPlaying = false;
+        let isFollowing = false;
+        let isLiked = false;
+        let commentOpen = false;
+        let videoData = {};
+
+        // Initialize video states
+        videos.forEach(v => {
+            videoData[v.id] = {
+                liked: false,
+                comments: [...v.comments]
+            };
+        });
+
+        // Format numbers
+        function formatNum(num) {
+            return num >= 1000 ? (num / 1000).toFixed(1) + 'k' : num;
+        }
+
+        // Render all video pages
+        function renderVideos() {
+            const container = document.getElementById('scrollContainer');
+            container.innerHTML = videos.map((video, index) => `
+                <div class="video-page" id="videoPage${index}" data-index="${index}">
+                    <div class="video-bg"></div>
+                    
+                    <div class="page-indicators">
+                        ${videos.map((_, i) => `<div class="page-dot ${i === index ? 'active' : ''}" onclick="scrollToVideo(${i})"></div>`).join('')}
+                    </div>
+                    
+                    <div class="video-content" onclick="togglePlay(${index})">
+                        <video class="video-element" id="video${index}" src="${video.videoFile}" loop preload="metadata"></video>
+                        <div class="video-overlay"></div>
+                        <div class="video-title-display">${video.title}</div>
+                        <div class="play-button" id="playBtn${index}">
+                            <div class="pause-icon"></div>
+                        </div>
+                        
+                        <!-- Bottom Info -->
+                        <div class="info-overlay">
+                            <div class="user-handle" id="userHandle${index}">${video.user}</div>
+                            <div class="caption-text" id="caption${index}">
+                                ${video.caption}<span class="more-link" onclick="expandCaption()">...more</span>
+                            </div>
+                            <div class="audio-info">
+                                <span>♫</span>
+                                <span class="audio-text" id="audio${index}">${video.audio}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="action-column">
+                            <div class="action-item" onclick="toggleFollow()">
+                                <div class="profile-wrapper">
+                                    <div class="profile-avatar" id="avatar${index}">${video.avatar}</div>
+                                    <div class="follow-icon" id="followIcon">+</div>
+                                </div>
+                                <span class="action-label" id="followLabel">Follow</span>
+                            </div>
+                            
+                            <div class="action-item ${videoData[video.id].liked ? 'liked' : ''}" onclick="toggleLike(${index})">
+                                <div class="action-circle" id="likeIcon${index}">${videoData[video.id].liked ? '❤️' : '👍'}</div>
+                                <span class="action-label" id="likeCount${index}">${formatNum(video.likes)}</span>
+                            </div>
+                            
+                            <div class="action-item" onclick="toggleComments()">
+                                <div class="action-circle">💬</div>
+                                <span class="action-label" id="commentCount${index}">${formatNum(videoData[video.id].comments.length)}</span>
+                            </div>
+                            
+                            <div class="action-item">
+                                <div class="action-circle">↗️</div>
+                                <span class="action-label">Share</span>
+                                <div class="share-hover">
+                                    <a href="https://instagram.com" target="_blank" class="share-icon ig">📸</a>
+                                    <a href="https://tiktok.com" target="_blank" class="share-icon tt">🎵</a>
+                                </div>
+                            </div>
+                            
+                            <div class="action-item">
+                                <div class="audio-disc"></div>
+                                <span class="action-label">♫</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Toggle Play
+        function togglePlay(index) {
+            const video = document.getElementById(`video${index}`);
+            const btn = document.getElementById(`playBtn${index}`);
+            
+            if (video.paused) {
+                video.play();
+                btn.classList.add('playing');
+                btn.classList.add('show');
+                setTimeout(() => btn.classList.remove('show'), 800);
+            } else {
+                video.pause();
+                btn.classList.remove('playing');
+                btn.classList.add('show');
+                setTimeout(() => btn.classList.remove('show'), 800);
+            }
+            
+            video.onended = function() {
+                btn.classList.remove('playing');
+                btn.classList.add('show');
+                showToast('✓ Completed!');
+                setTimeout(() => btn.classList.remove('show'), 2000);
+                
+                // Check if this is for mission (watch mission)
+                if (missionActive === 'watch') {
+                    // Clear mission active flag
+                    sessionStorage.removeItem('missionActive');
+                    
+                    // Add Watch to completed missions
+                    if (!completedMissions.includes('btnWatch')) {
+                        completedMissions.push('btnWatch');
+                    }
+                    
+                    // Add XP to sessionStorage
+                    currentXP += 50;
+                    sessionStorage.setItem('currentXP', currentXP);
+                    sessionStorage.setItem('completedMissions', JSON.stringify(completedMissions));
+                    
+                    showMissionComplete('🎬 Watch Performance completed!<br>+50 XP');
+                }
+            };
+        }
+
+        // Show mission completion notification
+        function showMissionComplete(message) {
+            var notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #4CAF50, #45a049);
+                padding: 30px 40px;
+                border-radius: 20px;
+                color: white;
+                font-size: 1.2rem;
+                font-weight: 600;
+                text-align: center;
+                z-index: 9999;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+                animation: popIn 0.3s ease;
+            `;
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(function() {
+                window.location.href = 'mission.html';
+            }, 2000);
+        }
+
+        // Toggle Follow
+        function toggleFollow() {
+            isFollowing = !isFollowing;
+            const followIcon = document.getElementById('followIcon');
+            const followLabel = document.getElementById('followLabel');
+            
+            if (isFollowing) {
+                followIcon.textContent = '✓';
+                followLabel.textContent = 'Following';
+                document.querySelector('.action-item').classList.add('following');
+            } else {
+                followIcon.textContent = '+';
+                followLabel.textContent = 'Follow';
+                document.querySelector('.action-item').classList.remove('following');
+            }
+            
+            showToast(isFollowing ? 'Following! ✓' : 'Follow');
+        }
+
+        // Toggle Like
+        function toggleLike(index) {
+            const video = videos[index];
+            const state = videoData[video.id];
+            state.liked = !state.liked;
+            
+            video.likes += state.liked ? 1 : -1;
+            
+            const btn = document.querySelectorAll('.action-item')[1];
+            const icon = document.getElementById(`likeIcon${index}`);
+            const count = document.getElementById(`likeCount${index}`);
+            
+            btn.classList.toggle('liked', state.liked);
+            icon.textContent = state.liked ? '❤️' : '👍';
+            count.textContent = formatNum(video.likes);
+            
+            showToast(state.liked ? 'Liked! ❤️' : 'Unliked');
+            
+            // Check if this is for mission (like mission)
+            if (missionActive === 'like' && state.liked) {
+                // Clear mission active flag
+                sessionStorage.removeItem('missionActive');
+                
+                // Add Like to completed missions
+                if (!completedMissions.includes('btnLike')) {
+                    completedMissions.push('btnLike');
+                }
+                
+                // Add XP to sessionStorage
+                currentXP += 5;
+                sessionStorage.setItem('currentXP', currentXP);
+                sessionStorage.setItem('completedMissions', JSON.stringify(completedMissions));
+                
+                showMissionComplete('❤️ Like completed!<br>+5 XP');
+            }
+        }
+
+        // Toggle Comments
+        function toggleComments() {
+            commentOpen = !commentOpen;
+            const panel = document.getElementById('commentPanel');
+            const currentPage = document.getElementById(`videoPage${currentVideo}`);
+            
+            panel.classList.toggle('open', commentOpen);
+            currentPage.classList.toggle('comments-open', commentOpen);
+            
+            if (commentOpen) {
+                renderComments();
+            }
+        }
+
+        // Post Comment
+        function postComment() {
+            const input = document.getElementById('commentInput');
+            const text = input.value.trim();
+            
+            if (text) {
+                const video = videos[currentVideo];
+                videoData[video.id].comments.unshift({
+                    user: 'You',
+                    text: text,
+                    time: 'Just now'
+                });
+                
+                input.value = '';
+                document.getElementById(`commentCount${currentVideo}`).textContent = formatNum(videoData[video.id].comments.length);
+                renderComments();
+                showToast('Comment posted!');
+                
+                // Check if this is for mission (comment mission)
+                if (missionActive === 'comment') {
+                    // Clear mission active flag
+                    sessionStorage.removeItem('missionActive');
+                    
+                    // Add Comment to completed missions
+                    if (!completedMissions.includes('btnComment')) {
+                        completedMissions.push('btnComment');
+                    }
+                    
+                    // Add XP to sessionStorage
+                    currentXP += 10;
+                    sessionStorage.setItem('currentXP', currentXP);
+                    sessionStorage.setItem('completedMissions', JSON.stringify(completedMissions));
+                    
+                    showMissionComplete('💬 Comment completed!<br>+10 XP');
+                }
+            }
+        }
+
+        function handleEnter(event) {
+            if (event.key === 'Enter') postComment();
+        }
+
+        function renderComments() {
+            const video = videos[currentVideo];
+            const list = document.getElementById('commentsList');
+            const comments = videoData[video.id].comments;
+            
+            list.innerHTML = comments.map(c => `
+                <div class="comment-item">
+                    <div class="comment-avatar">${c.user.charAt(0)}</div>
+                    <div class="comment-body">
+                        <div class="comment-name">${c.user}</div>
+                        <div class="comment-msg">${c.text}</div>
+                        <div class="comment-time">${c.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Scroll to specific video
+        function scrollToVideo(index) {
+            const container = document.getElementById('scrollContainer');
+            const page = document.getElementById(`videoPage${index}`);
+            container.scrollTo({
+                top: page.offsetTop,
+                behavior: 'smooth'
+            });
+        }
+
+        // Expand caption
+        function expandCaption() {
+            const caption = document.getElementById(`caption${currentVideo}`);
+            caption.style.webkitLineClamp = 'unset';
+            showToast('Caption expanded');
+        }
+
+        // Toast notification
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastText').textContent = text;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // Track current video on scroll
+        const container = document.getElementById('scrollContainer');
+        let scrollTimeout;
+        
+        container.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const scrollTop = container.scrollTop;
+                const pageHeight = window.innerHeight;
+                const newVideo = Math.round(scrollTop / pageHeight);
+                
+                if (newVideo !== currentVideo) {
+                    // Pause previous video
+                    const prevVideo = document.getElementById(`video${currentVideo}`);
+                    if (prevVideo) prevVideo.pause();
+                    
+                    // Update current video index
+                    currentVideo = newVideo;
+                    
+                    // Play new video
+                    const newVid = document.getElementById(`video${currentVideo}`);
+                    if (newVid) newVid.play().catch(() => {});
+                }
+                
+                // Update dots
+                document.querySelectorAll('.page-dot').forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentVideo);
+                });
+            }, 100);
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            
+            if (query) {
+                // Filter videos - in a real app this would update the visible videos
+                showToast('Search: ' + query);
+            }
+        });
+
+        // Initialize
+        renderVideos();
+
+        // Auto-play first video
+        setTimeout(() => {
+            const firstVideo = document.getElementById('video0');
+            if (firstVideo) {
+                const playBtn = document.getElementById('playBtn0');
+                firstVideo.play().then(() => {
+                    playBtn.classList.add('playing');
+                    playBtn.classList.add('show');
+                    setTimeout(() => playBtn.classList.remove('show'), 800);
+                }).catch(() => {});
+            }
+        }, 500);
+
+        function toggleMenu() {
+            document.getElementById('dropdownMenu').classList.toggle('show');
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.menu-btn') && !e.target.closest('.dropdown-menu')) {
+                document.getElementById('dropdownMenu').classList.remove('show');
+            }
+        });
+        
+        // Add animation style for mission complete
+        const watchStyle = document.createElement('style');
+        watchStyle.textContent = `@keyframes popIn { from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }`;
+        document.head.appendChild(watchStyle);
+
+        // Footer
+        document.body.insertAdjacentHTML('beforeend', `
+            <footer style="background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.6) 100%); padding: 30px 20px; text-align: center; margin-top: 50px;">
+                <div style="max-width: 1200px; margin: 0 auto;">
+                    <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 15px;">
+                        <a href="https://instagram.com" target="_blank" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);border-radius:50%;color:#FFFFFF;font-size:1.1rem;text-decoration:none;">📸</a>
+                        <a href="https://twitter.com" target="_blank" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);border-radius:50%;color:#FFFFFF;font-size:1.1rem;text-decoration:none;">🐦</a>
+                        <a href="https://youtube.com" target="_blank" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);border-radius:50%;color:#FFFFFF;font-size:1.1rem;text-decoration:none;">📺</a>
+                        <a href="https://tiktok.com" target="_blank" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);border-radius:50%;color:#FFFFFF;font-size:1.1rem;text-decoration:none;">🎵</a>
+                    </div>
+                    <p style="font-size: 0.8rem; opacity: 0.6;">© 2026 STAGE - Production Media, Vocational Program, University of Indonesia</p>
+                </div>
+            </footer>
+        `);
+    </script>
+
+    <script>
+        // Add logout to dropdown menu
+        document.querySelector('.dropdown-menu').innerHTML += '<a href="#" onclick="logout()" style="color: #ff6b6b;">🚪 Logout</a>';
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
+    <script>
+        // Make sure dropdown has logout option
+        var dropdown = document.getElementById('dropdownMenu');
+        if (dropdown) {
+            var logoutLink = document.createElement('a');
+            logoutLink.href = '#';
+            logoutLink.onclick = function() { window.location.href = 'login.html'; };
+            logoutLink.textContent = '🚪 Logout';
+            logoutLink.style.color = '#ff6b6b';
+            logoutLink.style.cursor = 'pointer';
+            dropdown.appendChild(logoutLink);
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
+        });
+    </script>
+</body>
+</html>

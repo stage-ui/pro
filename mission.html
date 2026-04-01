@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Board - STAGE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4B1E83;
+            --background: #5A2AA3;
+            --accent: #0D10DD;
+            --white: #FFFFFF;
+            --gradient-start: #5A2AA3;
+            --gradient-end: #4B1E83;
+            --gold: #FFD700;
+            --success: #4CAF50;
+            --mission-btn: #00E5FF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--white);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(75, 30, 131, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 35px;
+        }
+
+        .logo img {
+            height: 100%;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 5px;
+            background: rgba(255,255,255,0.1);
+            padding: 5px;
+            border-radius: 25px;
+        }
+
+        .nav-tab {
+            padding: 8px 20px;
+            background: transparent;
+            border: none;
+            color: var(--white);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-tab.active {
+            background: var(--accent);
+        }
+
+        .xp-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+            border: 2px solid var(--gold);
+            border-radius: 25px;
+        }
+
+        .xp-icon {
+            font-size: 1.2rem;
+        }
+
+        .xp-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .page-header {
+            padding: 100px 20px 30px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .user-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .user-stat {
+            text-align: center;
+            padding: 15px 25px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            min-width: 120px;
+        }
+
+        .user-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .user-stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .next-level-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            padding: 8px 18px;
+            background: linear-gradient(135deg, var(--accent), #4FC3F7);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .level-bar-section {
+            padding: 20px;
+            background: rgba(0,0,0,0.2);
+            margin: 20px 0;
+            border-radius: 15px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .level-bar-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #4FC3F7);
+            border-radius: 6px;
+            width: 15%;
+            transition: width 1.5s ease-out;
+        }
+
+        .main-content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .mission-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .nav-tabs {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .xp-display {
+                padding: 6px 12px;
+            }
+        }
+
+        .mission-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.4s ease;
+        }
+
+        .mission-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 40px rgba(13, 16, 221, 0.2);
+        }
+
+        .mission-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .mission-icon {
+            font-size: 2rem;
+        }
+
+        .mission-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .mission-desc {
+            font-size: 0.85rem;
+            font-weight: 300;
+            opacity: 0.85;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .mission-xp {
+            display: inline-block;
+            padding: 4px 12px;
+            background: linear-gradient(135deg, var(--gold), #FFA500);
+            color: #333;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .mission-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--mission-btn);
+            border: none;
+            border-radius: 25px;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mission-btn:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 229, 255, 0.4);
+        }
+
+        .mission-btn.completed {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .mission-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        /* Leaderboard */
+        .leaderboard-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        .leaderboard-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .your-rank {
+            padding: 8px 16px;
+            background: var(--accent);
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            transform: scale(1.01);
+            border-color: var(--accent);
+        }
+
+        .leaderboard-item.current-user {
+            border-color: var(--gold);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+        }
+
+        .rank-number {
+            font-size: 1.3rem;
+            font-weight: 800;
+            min-width: 35px;
+            text-align: center;
+        }
+
+        .rank-1 { color: var(--gold); }
+        .rank-2 { color: var(--silver); }
+        .rank-3 { color: var(--bronze); }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #4FC3F7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .user-level {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .user-xp {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--background), var(--primary));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .modal-desc {
+            text-align: center;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .quiz-question {
+            margin-bottom: 20px;
+        }
+
+        .quiz-question-text {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .quiz-option {
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: var(--white);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .quiz-option.selected {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .quiz-option.correct {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .quiz-option.wrong {
+            background: #f44336;
+            border-color: #f44336;
+        }
+
+        .quiz-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--mission-btn);
+            border: none;
+            border-radius: 25px;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: margin-top: 20px;
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .quiz-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .upload-area {
+            border: 3px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 18px;
+            padding: 35px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(13, 16, 221, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .upload-text {
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .upload-tips {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .upload-tips h4 {
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .upload-tips ul {
+            list-style: none;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .upload-tips li {
+            margin-bottom: 6px;
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .upload-tips li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+        }
+
+        .inspiration-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .inspiration-link:hover {
+            background: var(--accent);
+        }
+
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--success), #45a049);
+            color: var(--white);
+            padding: 15px 22px;
+            border-radius: 12px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            transform: translateX(150%);
+            transition: transform 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-icon {
+            font-size: 1.4rem;
+        }
+
+        footer {
+            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.6) 100%);
+            padding: 60px 20px 30px;
+            margin-top: 50px;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-container { grid-template-columns: 1fr; text-align: center; }
+            .social-links { justify-content: center; }
+        }
+        
+        .footer-brand { display: flex; flex-direction: column; gap: 15px; }
+        .footer-brand .logo img { height: 40px; }
+        .footer-brand p { font-size: 0.9rem; line-height: 1.6; opacity: 0.8; }
+        
+        .footer-title { font-size: 1rem; font-weight: 600; margin-bottom: 20px; color: #FFD700; }
+        
+        .footer-links { list-style: none; padding: 0; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: #FFFFFF; text-decoration: none; font-size: 0.9rem; opacity: 0.7; transition: all 0.3s ease; }
+        .footer-links a:hover { opacity: 1; color: #FFD700; }
+        
+        .contact-info p { font-size: 0.85rem; margin-bottom: 10px; opacity: 0.8; }
+        
+        .social-links { display: flex; gap: 15px; margin-top: 20px; }
+        .social-links a { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border-radius: 50%; color: #FFFFFF; font-size: 1.1rem; transition: all 0.3s ease; }
+        .social-links a:hover { background: #FFD700; transform: translateY(-3px); }
+        
+        .footer-bottom { max-width: 1200px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .footer-bottom p { font-size: 0.8rem; opacity: 0.6; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-left">
+                <a href="index.html" class="logo">
+                    <img src="logo-stage.webp" alt="STAGE" style="height: 35px;">
+                </a>
+            </div>
+            
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('missions')" id="tab-missions">🎯 Mission Board</button>
+                <button class="nav-tab" onclick="switchTab('leaderboard')" id="tab-leaderboard">🏆 Leaderboard</button>
+            </div>
+            
+            <div class="xp-display">
+                <span class="xp-icon">⭐</span>
+                <span class="xp-value" id="headerXp">0</span>
+            </div>
+            
+            <button onclick="logout()" style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem;">🚪 Logout</button>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <h1 class="page-title" id="pageTitle">🎯 Mission Board</h1>
+        
+        <div class="level-bar-section">
+            <div class="level-bar-header">
+                <span>Current: <strong id="levelText">New Talent</strong></span>
+                <span><span id="xpProgress">0</span> / 1000 XP</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="next-level-info">
+                <span>🎖️</span>
+                <span>Next Level: <strong>Intermediate Performer</strong> (1000 XP more)</span>
+            </div>
+        </div>
+        
+        <div class="user-stats">
+            <div class="user-stat">
+                <div class="user-stat-value" id="totalXp">0</div>
+                <div class="user-stat-label">Your XP</div>
+            </div>
+            <div class="user-stat">
+                <div class="user-stat-value" id="rankDisplay">#10</div>
+                <div class="user-stat-label">Your Rank</div>
+            </div>
+            <div class="user-stat">
+                <div class="user-stat-value" id="tasksCompleted">0</div>
+                <div class="user-stat-label">Completed</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-content">
+        <!-- Mission Board -->
+        <div class="tab-content active" id="missions">
+                <div class="mission-grid">
+                <div class="mission-card">
+                    <div class="mission-header">
+                        <span class="mission-icon">🔍</span>
+                        <span class="mission-title">Explore STAGE</span>
+                    </div>
+                    <p class="mission-desc">Visit the Explore STAGE page and learn about our program for at least 10 seconds.</p>
+                    <span class="mission-xp">+10 XP</span>
+                    <button class="mission-btn" id="btnExplore" onclick="startExploreMission()">Start Mission</button>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-header">
+                        <span class="mission-icon">🎬</span>
+                        <span class="mission-title">Watch Performance</span>
+                    </div>
+                    <p class="mission-desc">Watch at least one full performance video on the Watch Performance page.</p>
+                    <span class="mission-xp">+50 XP</span>
+                    <button class="mission-btn" id="btnWatch" onclick="startWatchMission()">Start Mission</button>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-header">
+                        <span class="mission-icon">📝</span>
+                        <span class="mission-title">Stage Quiz</span>
+                    </div>
+                    <p class="mission-desc">Test your knowledge about STAGE! Answer all questions correctly to earn max XP.</p>
+                    <span class="mission-xp">+100 XP</span>
+                    <button class="mission-btn" id="btnQuiz" onclick="openQuiz()">Start Mission</button>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-header">
+                        <span class="mission-icon">📹</span>
+                        <span class="mission-title">Upload Talent</span>
+                    </div>
+                    <p class="mission-desc">Upload a video showcasing your performance talent to the STAGE community.</p>
+                    <span class="mission-xp">+75 XP</span>
+                    <button class="mission-btn" id="btnUpload" onclick="openUploadModal()">Start Mission</button>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-header">
+                        <span class="mission-icon">❤️</span>
+                        <span class="mission-title">Like a Performance</span>
+                    </div>
+                    <p class="mission-desc">Show your support by liking a performance video you enjoy.</p>
+                    <span class="mission-xp">+5 XP</span>
+                    <button class="mission-btn" id="btnLike" onclick="startLikeMission()">Start Mission</button>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-header">
+                        <span class="mission-icon">💬</span>
+                        <span class="mission-title">Leave a Comment</span>
+                    </div>
+                    <p class="mission-desc">Share your thoughts by commenting on a performance video.</p>
+                    <span class="mission-xp">+10 XP</span>
+                    <button class="mission-btn" id="btnComment" onclick="startCommentMission()">Start Mission</button>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-header">
+                        <span class="mission-icon">👥</span>
+                        <span class="mission-title">Follow a Peer</span>
+                    </div>
+                    <p class="mission-desc">Connect with fellow STAGE students by following their profile.</p>
+                    <span class="mission-xp">+5 XP</span>
+                    <button class="mission-btn" id="btnFollow" onclick="completeTask(5, this, 'btnFollow')">Start Mission</button>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-header">
+                        <span class="mission-icon">🔔</span>
+                        <span class="mission-title">Daily Check-in</span>
+                    </div>
+                    <p class="mission-desc">Log in to STAGE today to maintain your streak!</p>
+                    <span class="mission-xp">+15 XP</span>
+                    <button class="mission-btn" id="btnDaily" onclick="completeTask(15, this, 'btnDaily')">Start Mission</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="tab-content" id="leaderboard">
+            <div class="leaderboard-container">
+                <div class="leaderboard-header">
+                    <h2 class="leaderboard-title">🏆 Top Performers</h2>
+                    <span class="your-rank">Your Rank: #<span id="userRank">8</span></span>
+                </div>
+                <div class="leaderboard-list" id="leaderboardList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div class="modal-overlay" id="quizModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('quizModal')">&times;</button>
+            <h2 class="modal-title">📝 Stage Quiz</h2>
+            <p class="modal-desc">Test your knowledge about STAGE!</p>
+            <div id="quizContainer">
+                <div class="quiz-question">
+                    <p class="quiz-question-text">1. What does STAGE stand for?</p>
+                    <div class="quiz-options">
+                        <button class="quiz-option" onclick="selectOption(this, false)">Sports and Technical Athletics Global Education</button>
+                        <button class="quiz-option" onclick="selectOption(this, true)">Study of Theatre Arts & Global Entertainment</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Stage Training and Academic Great Education</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Strategic Theater Arts and General Excellence</button>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p class="quiz-question-text">2. Which department is STAGE under?</p>
+                    <div class="quiz-options">
+                        <button class="quiz-option" onclick="selectOption(this, false)">Computer Science</button>
+                        <button class="quiz-option" onclick="selectOption(this, true)">Production Media, Vocational Program</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Business Administration</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Engineering</button>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p class="quiz-question-text">3. What is the main focus of STAGE?</p>
+                    <div class="quiz-options">
+                        <button class="quiz-option" onclick="selectOption(this, false)">Film Making</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Graphic Design</button>
+                        <button class="quiz-option" onclick="selectOption(this, true)">Broadway and Performance Art</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Music Production</button>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p class="quiz-question-text">4. Which university is STAGE part of?</p>
+                    <div class="quiz-options">
+                        <button class="quiz-option" onclick="selectOption(this, false)">University of Gadjah Mada</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">University of Brawijaya</button>
+                        <button class="quiz-option" onclick="selectOption(this, true)">University of Indonesia</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">University of Diponegoro</button>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p class="quiz-question-text">5. What career opportunities does STAGE provide?</p>
+                    <div class="quiz-options">
+                        <button class="quiz-option" onclick="selectOption(this, false)">Software Developer</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Accountant</button>
+                        <button class="quiz-option" onclick="selectOption(this, true)">Stage Manager, Actor, Director</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Data Scientist</button>
+                    </div>
+                </div>
+                <button class="quiz-submit" onclick="submitQuiz()">Submit Answers</button>
+            </div>
+            <div class="quiz-result" id="quizResult" style="display: none;">
+                <div class="quiz-score"><span id="scoreDisplay">0</span>/5</div>
+                <p id="resultMessage">Keep trying!</p>
+                <button class="quiz-submit" onclick="resetQuiz()">Try Again</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('uploadModal')">&times;</button>
+            <h2 class="modal-title">📹 Upload Your Talent</h2>
+            <p class="modal-desc">Upload a video showcasing your performance talent!</p>
+            
+            <div class="upload-area" onclick="document.getElementById('videoInput').click()">
+                <div class="upload-icon">🎬</div>
+                <p class="upload-text">Click to upload your video</p>
+                <p class="upload-hint">MP4, MOV, or WebM up to 100MB</p>
+                <input type="file" id="videoInput" accept="video/*" style="display: none" onchange="handleVideoUpload(event)">
+            </div>
+            
+            <div class="upload-tips">
+                <h4>📌 Upload Tips:</h4>
+                <ul>
+                    <li>Choose a location with good lighting!</li>
+                    <li>Ensure there is no background noise!</li>
+                </ul>
+            </div>
+            
+            <div class="inspiration-link" onclick="window.location.href='watch.html'">
+                <span>💡</span>
+                <span>Need Inspiration? Watch Example Videos!</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span class="notification-icon">🎉</span>
+        <span id="notificationText">Task Completed! +10 XP</span>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="logo-stage.webp" alt="STAGE">
+                </a>
+                <p>STAGE (Study of Theatre Arts & Global Entertainment) is a concentration in Production Media, Vocational Program, University of Indonesia. Focus on Broadway and Performance Art.</p>
+                <div class="social-links">
+                    <a href="https://instagram.com" target="_blank" title="Instagram">📸</a>
+                    <a href="https://twitter.com" target="_blank" title="Twitter">🐦</a>
+                    <a href="https://youtube.com" target="_blank" title="YouTube">📺</a>
+                    <a href="https://tiktok.com" target="_blank" title="TikTok">🎵</a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="footer-title">Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="explore.html">Explore STAGE</a></li>
+                    <li><a href="watch.html">Performances</a></li>
+                    <li><a href="mission.html">Missions</a></li>
+                    <li><a href="reward.html">Rewards</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="footer-title">Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="#">About STAGE</a></li>
+                    <li><a href="#">Curriculum</a></li>
+                    <li><a href="#">Faculty</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section contact-info">
+                <h4 class="footer-title">Contact Us</h4>
+                <p>📍 Vocational Program, University of Indonesia</p>
+                <p>📧 stage@ui.ac.id</p>
+                <p>📞 +62 21 786 7222</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2026 STAGE - Production Media, Vocational Program, University of Indonesia. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Check if logged in
+        if (sessionStorage.getItem('userLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        // ========== GLOBAL STATE MANAGEMENT ==========
+        
+        // Simple sessionStorage initialization - DON'T clear on every page load
+        // User will manually refresh browser to reset if needed
+        
+        // Global currentXP from sessionStorage (default 0)
+        var currentXP = parseInt(sessionStorage.getItem('currentXP')) || 0;
+
+        // Completed missions array
+        var completedMissions = JSON.parse(sessionStorage.getItem('completedMissions')) || [];
+
+        // Sync UI function - updates all .xp-count elements
+        function syncUI() {
+            // Update all elements with class .xp-count
+            document.querySelectorAll('.xp-count').forEach(function(el) {
+                el.textContent = currentXP;
+            });
+            
+            // Update header XP display
+            var headerXp = document.getElementById('headerXp');
+            if (headerXp) headerXp.textContent = currentXP;
+            
+            // Update total XP display
+            var totalXp = document.getElementById('totalXp');
+            if (totalXp) totalXp.textContent = currentXP;
+            
+            // Update completed tasks count
+            var tasksCompleted = document.getElementById('tasksCompleted');
+            if (tasksCompleted) tasksCompleted.textContent = completedMissions.length;
+
+            // Update progress bar
+            var progressBar = document.querySelector('.progress-fill');
+            if (progressBar) {
+                var progress = Math.min((currentXP / 1000) * 100, 100);
+                progressBar.style.width = progress + '%';
+            }
+
+            // Update XP progress text
+            var xpProgress = document.getElementById('xpProgress');
+            if (xpProgress) xpProgress.textContent = currentXP;
+
+            // Update level text based on XP
+            var levelText = document.getElementById('levelText');
+            var nextLevelText = document.querySelector('.next-level-info');
+            if (currentXP >= 2000) {
+                if (levelText) levelText.textContent = 'Master Performer';
+                if (nextLevelText) nextLevelText.innerHTML = '<span>🎖️</span><span>You reached the highest level!</span>';
+            } else if (currentXP >= 1000) {
+                if (levelText) levelText.textContent = 'Intermediate Performer';
+                if (nextLevelText) nextLevelText.innerHTML = '<span>🎖️</span><span>Next Level: <strong>Master Performer</strong> (1000 XP more)</span>';
+            } else {
+                if (levelText) levelText.textContent = 'New Talent';
+                if (nextLevelText) nextLevelText.innerHTML = '<span>🎖️</span><span>Next Level: <strong>Intermediate Performer</strong> (1000 XP more)</span>';
+            }
+
+            // Update button states for completed missions
+            var missionButtons = ['btnExplore', 'btnWatch', 'btnQuiz', 'btnUpload', 'btnLike', 'btnComment', 'btnFollow', 'btnDaily'];
+            missionButtons.forEach(function(btnId) {
+                var btn = document.getElementById(btnId);
+                if (btn && completedMissions.includes(btnId)) {
+                    btn.textContent = '✓ Completed';
+                    btn.classList.add('completed');
+                    btn.disabled = true;
+                }
+            });
+        }
+
+        // Add XP and update sessionStorage
+        function addXP(amount, missionId) {
+            currentXP += amount;
+            sessionStorage.setItem('currentXP', currentXP);
+            
+            if (missionId && !completedMissions.includes(missionId)) {
+                completedMissions.push(missionId);
+                sessionStorage.setItem('completedMissions', JSON.stringify(completedMissions));
+            }
+            
+            // Sync UI after XP update
+            syncUI();
+        }
+
+        // ========== MISSION FUNCTIONS ==========
+
+        let selectedAnswers = {};
+
+        function startExploreMission() {
+            sessionStorage.setItem('missionActive', 'explore');
+            window.location.href = 'explore.html';
+        }
+
+        function startWatchMission() {
+            sessionStorage.setItem('missionActive', 'watch');
+            window.location.href = 'watch.html';
+        }
+
+        function startLikeMission() {
+            sessionStorage.setItem('missionActive', 'like');
+            window.location.href = 'watch.html';
+        }
+
+        function startCommentMission() {
+            sessionStorage.setItem('missionActive', 'comment');
+            window.location.href = 'watch.html';
+        }
+
+        function openQuiz() {
+            document.getElementById('quizModal').classList.add('active');
+        }
+
+        function openUploadModal() {
+            document.getElementById('uploadModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function selectOption(btn, isCorrect) {
+            const questionDiv = btn.closest('.quiz-question');
+            const options = questionDiv.querySelectorAll('.quiz-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedAnswers[questionDiv.dataset.q] = isCorrect;
+        }
+
+        function submitQuiz() {
+            let correctCount = 0;
+            const questions = document.querySelectorAll('.quiz-question');
+            questions.forEach((q, i) => {
+                const selected = q.querySelector('.quiz-option.selected');
+                if (selected && selected.onclick.toString().includes('true')) {
+                    correctCount++;
+                }
+            });
+            
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('quizResult').style.display = 'block';
+            document.getElementById('scoreDisplay').textContent = correctCount;
+            
+            let message = '';
+            if (correctCount === 5) {
+                message = '🎉 Perfect! You earned 100 XP!';
+                addXP(100, 'btnQuiz');
+            } else if (correctCount >= 3) {
+                message = '👍 Good job! Try again for full XP!';
+            } else {
+                message = '📚 Keep learning about STAGE!';
+            }
+            document.getElementById('resultMessage').textContent = message;
+            syncUI();
+        }
+
+        function resetQuiz() {
+            selectedAnswers = {};
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'wrong');
+            });
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('quizResult').style.display = 'none';
+        }
+
+        function handleVideoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                addXP(75, 'btnUpload');
+                showNotification('📹 Video uploaded! +75 XP');
+                closeModal('uploadModal');
+                syncUI();
+            }
+        }
+
+        function completeTask(xp, btn, btnId) {
+            const buttonId = btnId || (btn ? btn.id : null);
+            if (!buttonId) return;
+            
+            if (completedMissions.includes(buttonId)) return;
+            
+            addXP(xp, buttonId);
+            
+            if (btn) {
+                btn.textContent = '✓ Completed';
+                btn.classList.add('completed');
+                btn.disabled = true;
+            } else {
+                var buttonEl = document.getElementById(buttonId);
+                if (buttonEl) {
+                    buttonEl.textContent = '✓ Completed';
+                    buttonEl.classList.add('completed');
+                    buttonEl.disabled = true;
+                }
+            }
+            
+            showNotification('Task Completed! +' + xp + ' XP');
+        }
+
+        function showNotification(message) {
+            var notification = document.getElementById('notification');
+            var notificationText = document.getElementById('notificationText');
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            setTimeout(function() {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+            
+            if (tabName === 'leaderboard') {
+                renderLeaderboard();
+            }
+        }
+
+        // Leaderboard rendering
+        function renderLeaderboard() {
+            var leaderboardData = [
+                { name: 'Ari Setiawan', xp: 850, level: 'Intermediate' },
+                { name: 'Siti Nurhaliza', xp: 720, level: 'Intermediate' },
+                { name: 'Budi Santoso', xp: 650, level: 'New Talent' },
+                { name: 'Dewi Lestari', xp: 580, level: 'New Talent' },
+                { name: 'Rudi Hermawan', xp: 520, level: 'New Talent' },
+                { name: 'Lisa Amelia', xp: 480, level: 'New Talent' },
+                { name: 'Joko Wijaya', xp: 420, level: 'New Talent' },
+                { name: 'You', xp: currentXP, level: currentXP >= 1000 ? 'Intermediate' : 'New Talent', isCurrentUser: true },
+                { name: 'Nina Hartati', xp: 180, level: 'New Talent' },
+                { name: 'Doni Kusuma', xp: 95, level: 'New Talent' }
+            ];
+            
+            // Sort by XP descending
+            leaderboardData.sort(function(a, b) { return b.xp - a.xp; });
+            
+            // Find user rank
+            var userRank = leaderboardData.findIndex(function(u) { return u.isCurrentUser; }) + 1;
+            document.getElementById('userRank').textContent = userRank;
+            document.getElementById('rankDisplay').textContent = '#' + userRank;
+            
+            var html = '';
+            leaderboardData.forEach(function(user, index) {
+                var rankClass = 'rank-' + (index + 1);
+                html += '<div class="leaderboard-item' + (user.isCurrentUser ? ' current-user' : '') + '">';
+                html += '<div class="rank-number ' + rankClass + '">' + (index + 1) + '</div>';
+                html += '<div class="user-avatar">' + user.name.charAt(0) + '</div>';
+                html += '<div class="user-info">';
+                html += '<div class="user-name">' + user.name + '</div>';
+                html += '<div class="user-level">' + user.level + '</div>';
+                html += '</div>';
+                html += '<div class="user-xp">' + user.xp + ' XP</div>';
+                html += '</div>';
+            });
+            
+            document.getElementById('leaderboardList').innerHTML = html;
+        }
+
+        // Initialize on load
+        syncUI();
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

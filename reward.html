@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claim Reward - STAGE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4B1E83;
+            --background: #5A2AA3;
+            --accent: #0D10DD;
+            --white: #FFFFFF;
+            --gradient-start: #5A2AA3;
+            --gradient-end: #4B1E83;
+            --gold: #FFD700;
+            --silver: #C0C0C0;
+            --bronze: #CD7F32;
+            --success: #4CAF50;
+            --danger: #ff4757;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--white);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(75, 30, 131, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn, .home-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        .back-btn:hover, .home-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--white), #E0D4FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .xp-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+            border: 2px solid var(--gold);
+            border-radius: 30px;
+        }
+
+        .xp-icon {
+            font-size: 1.4rem;
+        }
+
+        .xp-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .xp-label {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn:hover { background: rgba(255, 255, 255, 0.2); }
+        .menu-btn span { width: 18px; height: 2px; background: var(--white); border-radius: 1px; }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 20px;
+            background: rgba(75, 30, 131, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 10px;
+            display: none;
+            min-width: 180px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 200;
+        }
+
+        .dropdown-menu.show { display: block; }
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 18px;
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-menu a:hover { background: rgba(255, 255, 255, 0.1); }
+
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            margin-left: 18px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after, nav a.active::after {
+            width: 100%;
+        }
+
+        .main-content {
+            padding: 100px 25px 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .user-banner {
+            background: linear-gradient(135deg, rgba(13, 16, 221, 0.3), rgba(75, 30, 131, 0.4));
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent), #4FC3F7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border: 3px solid var(--white);
+            box-shadow: 0 5px 20px rgba(13, 16, 221, 0.4);
+        }
+
+        .user-details h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .user-level {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .level-badge {
+            padding: 4px 12px;
+            background: var(--gold);
+            color: #333;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .level-progress {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .stats-grid {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .filter-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 10px 22px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: var(--white);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-tab:hover, .filter-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .wishlist-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-toggle:hover, .wishlist-toggle.active {
+            background: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 50px rgba(13, 16, 221, 0.3);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .badge-new { background: var(--accent); }
+        .badge-hot { background: var(--danger); }
+        .badge-limited { background: var(--gold); color: #333; }
+        .badge-exclusive { background: linear-gradient(135deg, #9C27B0, #E040FB); }
+        .badge-bestseller { background: linear-gradient(135deg, #FF9800, #FFB74D); }
+
+        .wishlist-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .wishlist-btn.active {
+            background: var(--danger);
+        }
+
+        .product-image {
+            height: 180px;
+            background: linear-gradient(135deg, var(--accent), #4FC3F7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .product-image-icon {
+            z-index: 1;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: relative;
+            z-index: 2;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .product-desc {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .price-icon {
+            font-size: 1.2rem;
+        }
+
+        .price-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .price-original {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+
+        .points-needed {
+            font-size: 0.75rem;
+            color: #4FC3F7;
+            margin-top: 5px;
+        }
+
+        .redeem-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            border: none;
+            border-radius: 25px;
+            color: var(--white);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .redeem-btn:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(13, 16, 221, 0.5);
+        }
+
+        .redeem-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .redeem-btn.redeemed {
+            background: var(--success);
+        }
+
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+        }
+
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--success), #45a049);
+            color: var(--white);
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            transform: translateX(150%);
+            transition: transform 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+        }
+
+        .toast-content h4 {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .toast-content p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1500;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--background), var(--primary));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 35px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .modal-desc {
+            font-size: 1rem;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.primary {
+            background: var(--accent);
+            border: none;
+            color: var(--white);
+        }
+
+        .modal-btn.secondary {
+            background: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-text {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        footer {
+            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.6) 100%);
+            padding: 60px 20px 30px;
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-container { grid-template-columns: 1fr; text-align: center; }
+            .social-links { justify-content: center; }
+        }
+        
+        .footer-brand { display: flex; flex-direction: column; gap: 15px; }
+        .footer-brand .logo img { height: 40px; }
+        .footer-brand p { font-size: 0.9rem; line-height: 1.6; opacity: 0.8; }
+        
+        .footer-title { font-size: 1rem; font-weight: 600; margin-bottom: 20px; color: #FFD700; }
+        
+        .footer-links { list-style: none; padding: 0; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: #FFFFFF; text-decoration: none; font-size: 0.9rem; opacity: 0.7; transition: all 0.3s ease; }
+        .footer-links a:hover { opacity: 1; color: #FFD700; }
+        
+        .contact-info p { font-size: 0.85rem; margin-bottom: 10px; opacity: 0.8; }
+        
+        .social-links { display: flex; gap: 15px; margin-top: 20px; }
+        .social-links a { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border-radius: 50%; color: #FFFFFF; font-size: 1.1rem; transition: all 0.3s ease; }
+        .social-links a:hover { background: #FFD700; transform: translateY(-3px); }
+        
+        .footer-bottom { max-width: 1200px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .footer-bottom p { font-size: 0.8rem; opacity: 0.6; }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .user-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .user-info {
+                flex-direction: column;
+            }
+
+            .stats-grid {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .filter-section {
+                flex-direction: column;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                display: none;
+            }
+
+            .xp-display {
+                padding: 8px 15px;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo"><img src="logo-stage.webp" alt="STAGE" style="height: 32px;"></a>
+            
+            <div class="xp-display">
+                <span class="xp-icon">⭐</span>
+                <span class="xp-value" id="currentXp">0</span>
+            </div>
+            
+            <div style="position: relative;">
+                <button class="menu-btn" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="index.html">🏠 Home</a>
+                    <a href="explore.html">🔍 Explore</a>
+                    <a href="watch.html">🎬 Performance</a>
+                    <a href="reward.html">🏆 Reward</a>
+                    <a href="mission.html">🎯 Mission</a>
+                    <a href="#" onclick="logout()" style="color: #ff6b6b;">🚪 Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="user-banner">
+            <div class="user-info">
+                <div class="user-avatar">🎭</div>
+                <div class="user-details">
+                    <h2>STAGE Performer</h2>
+                    <div class="user-level">
+                        <span class="level-badge">New Talent</span>
+                        <span class="level-progress">Level 1 • 0/1000 XP</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="totalXp">0</div>
+                    <div class="stat-label">Total XP</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="rewardsClaimed">0</div>
+                    <div class="stat-label">Claimed</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="wishlistCount">0</div>
+                    <div class="stat-label">Wishlist</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterProducts('all')">All</button>
+                <button class="filter-tab" onclick="filterProducts('merchandise')">Merchandise</button>
+                <button class="filter-tab" onclick="filterProducts('ticket')">Tickets</button>
+                <button class="filter-tab" onclick="filterProducts('workshop')">Workshop</button>
+                <button class="filter-tab" onclick="filterProducts('digital')">Digital</button>
+            </div>
+            
+            <div class="wishlist-toggle" id="wishlistToggle" onclick="toggleWishlist()">
+                <span>❤️</span>
+                <span>Wishlist</span>
+            </div>
+        </div>
+
+        <div class="products-grid" id="productsGrid"></div>
+
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-icon">💝</div>
+            <p class="empty-text">Your wishlist is empty</p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">🎉</div>
+            <h2 class="modal-title">Congratulations!</h2>
+            <p class="modal-desc" id="modalDesc">You've successfully redeemed your reward!</p>
+            <div class="modal-actions">
+                <button class="modal-btn secondary" onclick="closeModal()">Close</button>
+                <button class="modal-btn primary" onclick="shareSuccess()">Share 🎁</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <span class="toast-icon">✅</span>
+        <div class="toast-content">
+            <h4>Success!</h4>
+            <p id="toastText">Item redeemed</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="logo-stage.webp" alt="STAGE">
+                </a>
+                <p>STAGE (Study of Theatre Arts & Global Entertainment) is a concentration in Production Media, Vocational Program, University of Indonesia. Focus on Broadway and Performance Art.</p>
+                <div class="social-links">
+                    <a href="https://instagram.com" target="_blank" title="Instagram">📸</a>
+                    <a href="https://twitter.com" target="_blank" title="Twitter">🐦</a>
+                    <a href="https://youtube.com" target="_blank" title="YouTube">📺</a>
+                    <a href="https://tiktok.com" target="_blank" title="TikTok">🎵</a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="footer-title">Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="explore.html">Explore STAGE</a></li>
+                    <li><a href="watch.html">Performances</a></li>
+                    <li><a href="mission.html">Missions</a></li>
+                    <li><a href="reward.html">Rewards</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="footer-title">Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="#">About STAGE</a></li>
+                    <li><a href="#">Curriculum</a></li>
+                    <li><a href="#">Faculty</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section contact-info">
+                <h4 class="footer-title">Contact Us</h4>
+                <p>📍 Vocational Program, University of Indonesia</p>
+                <p>📧 stage@ui.ac.id</p>
+                <p>📞 +62 21 786 7222</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2026 STAGE - Production Media, Vocational Program, University of Indonesia. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Check if logged in
+        if (sessionStorage.getItem('userLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        // Simple sessionStorage initialization - DON'T clear on every page load
+        
+        // Get current XP from sessionStorage (default 0)
+        var currentXP = parseInt(sessionStorage.getItem('currentXP')) || 0;
+        var completedMissions = JSON.parse(sessionStorage.getItem('completedMissions')) || [];
+
+        // Sync UI function - update all .xp-count elements
+        function syncUI() {
+            document.querySelectorAll('.xp-count').forEach(function(el) {
+                el.textContent = currentXP;
+            });
+        }
+        
+        let userData = { xp: currentXP, rewardsClaimed: 0, wishlist: [] };
+
+        const products = [
+            {
+                id: 1,
+                title: "STAGE T-Shirt Edition 1",
+                category: "merchandise",
+                desc: "Official STAGE merchandise - premium cotton t-shirt with embroidered logo. Limited edition design!",
+                price: 2500,
+                originalPrice: 3500,
+                image: "tshirt1.webp",
+                badge: "exclusive",
+                claimed: false
+            },
+            {
+                id: 2,
+                title: "STAGE T-Shirt Edition 2",
+                category: "merchandise",
+                desc: "Official STAGE merchandise - premium cotton t-shirt with modern design. Collect both editions!",
+                price: 2500,
+                originalPrice: 3500,
+                image: "tshirt2.webp",
+                badge: "exclusive",
+                claimed: false
+            },
+            {
+                id: 3,
+                title: "STAGE Tumbler Premium",
+                category: "merchandise",
+                desc: "High-quality stainless steel tumbler with STAGE logo. Keep your drinks hot or cold for hours.",
+                price: 1800,
+                originalPrice: 2500,
+                image: "tumbler1.webp",
+                badge: "bestseller",
+                claimed: false
+            },
+            {
+                id: 4,
+                title: "STAGE Tumbler Sport",
+                category: "merchandise",
+                desc: "Sport-style tumbler with flip lid. Perfect for rehearsals and backstage activities.",
+                price: 1800,
+                originalPrice: 2500,
+                image: "tumbler2.webp",
+                badge: "bestseller",
+                claimed: false
+            },
+            {
+                id: 5,
+                title: "STAGE Keychain Collectible",
+                category: "merchandise",
+                desc: "Elegant metal keychain with STAGE logo. A must-have for every STAGE enthusiast!",
+                price: 800,
+                originalPrice: 1200,
+                image: "keychain.webp",
+                badge: "new",
+                claimed: false
+            },
+            {
+                id: 6,
+                title: "Broadway Show Ticket",
+                category: "ticket",
+                desc: "VIP access to our grand musical production 'Phantom of the Campus'",
+                price: 300,
+                originalPrice: 450,
+                icon: "🎟️",
+                badge: "limited",
+                claimed: false
+            },
+            {
+                id: 3,
+                title: "Acting Workshop Premium",
+                category: "workshop",
+                desc: "2-hour intensive acting workshop with professional coaches",
+                price: 200,
+                originalPrice: 350,
+                icon: "🎭",
+                badge: "new",
+                claimed: false
+            },
+            {
+                id: 4,
+                title: "STAGE Digital Wallpaper Pack",
+                category: "digital",
+                desc: "20 exclusive 4K wallpapers featuring STAGE performances",
+                price: 50,
+                originalPrice: 100,
+                icon: "🖼️",
+                badge: null,
+                claimed: false
+            },
+            {
+                id: 5,
+                title: "STAGE Tote Bag",
+                category: "merchandise",
+                desc: "Eco-friendly canvas tote bag with STAGE logo print",
+                price: 150,
+                originalPrice: 250,
+                icon: "👜",
+                badge: null,
+                claimed: false
+            },
+            {
+                id: 6,
+                title: "Backstage Tour",
+                category: "ticket",
+                desc: "Exclusive behind-the-scenes tour of our performance venue",
+                price: 100,
+                originalPrice: 200,
+                icon: "🚪",
+                badge: "new",
+                claimed: false
+            },
+            {
+                id: 7,
+                title: "Dance Masterclass",
+                category: "workshop",
+                desc: "Learn choreography from our professional dance troupe",
+                price: 250,
+                originalPrice: 400,
+                icon: "💃",
+                badge: "hot",
+                claimed: false
+            },
+            {
+                id: 8,
+                title: "STAGE Pin Collection",
+                category: "merchandise",
+                desc: "Set of 5 exclusive enamel pins from STAGE productions",
+                price: 80,
+                originalPrice: 150,
+                icon: "📌",
+                badge: null,
+                claimed: false
+            },
+            {
+                id: 9,
+                title: "Soundtrack Album",
+                category: "digital",
+                desc: "Digital album with all songs from 'Indonesia Mengajar' musical",
+                price: 75,
+                originalPrice: 120,
+                icon: "💿",
+                badge: null,
+                claimed: false
+            },
+            {
+                id: 10,
+                title: "Meet & Greet Pass",
+                category: "ticket",
+                desc: "Meet the cast after the show - photo and签名 session",
+                price: 400,
+                originalPrice: 600,
+                icon: "🤝",
+                badge: "limited",
+                claimed: false
+            }
+        ];
+
+        let showWishlist = false;
+        let currentFilter = 'all';
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            let filtered = products;
+            
+            if (currentFilter !== 'all') {
+                filtered = products.filter(p => p.category === currentFilter);
+            }
+            
+            if (showWishlist) {
+                filtered = filtered.filter(p => userData.wishlist.includes(p.id));
+            }
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+            
+            document.getElementById('emptyState').style.display = 'none';
+            
+            grid.innerHTML = filtered.map(product => {
+                const pointsNeeded = product.price - userData.xp;
+                const canAfford = userData.xp >= product.price;
+                const isWishlisted = userData.wishlist.includes(product.id);
+                
+                let badge = '';
+                if (product.badge) {
+                    badge = `<span class="product-badge badge-${product.badge}">${product.badge === 'new' ? 'NEW' : product.badge === 'hot' ? 'HOT' : product.badge === 'exclusive' ? 'EXCLUSIVE' : product.badge === 'bestseller' ? 'BESTSELLER' : 'LIMITED'}</span>`;
+                }
+                
+                const imageHTML = product.image 
+                    ? `<img src="${product.image}" alt="${product.title}" class="product-img">` 
+                    : `<span class="product-image-icon">${product.icon || '🎁'}</span>`;
+                
+                return `
+                    <div class="product-card">
+                        ${badge}
+                        <button class="wishlist-btn ${isWishlisted ? 'active' : ''}" onclick="toggleWishlistItem(${product.id})">
+                            ${isWishlisted ? '❤️' : '🤍'}
+                        </button>
+                        <div class="product-image">
+                            ${imageHTML}
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">${product.title}</h3>
+                            <p class="product-desc">${product.desc}</p>
+                            <div class="product-meta">
+                                <div class="product-price">
+                                    <span class="price-icon">⭐</span>
+                                    <span class="price-value">${product.price}</span>
+                                    ${product.originalPrice ? `<span class="price-original">${product.originalPrice}</span>` : ''}
+                                </div>
+                            </div>
+                            ${!canAfford && !product.claimed ? `<div class="points-needed">💡 ${pointsNeeded} XP more to get this!</div>` : ''}
+                            <button class="redeem-btn ${product.claimed ? 'redeemed' : ''}" 
+                                onclick="redeemProduct(${product.id})" 
+                                ${product.claimed || !canAfford ? 'disabled' : ''}>
+                                ${product.claimed ? '✓ Claimed' : canAfford ? 'Redeem Now' : 'Not Enough XP'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterProducts(category) {
+            currentFilter = category;
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.textContent.toLowerCase().includes(category === 'all' ? 'all' : category)) {
+                    tab.classList.add('active');
+                }
+            });
+            renderProducts();
+        }
+
+        function toggleWishlist() {
+            showWishlist = !showWishlist;
+            const toggle = document.getElementById('wishlistToggle');
+            toggle.classList.toggle('active', showWishlist);
+            renderProducts();
+        }
+
+        function toggleWishlistItem(id) {
+            const index = userData.wishlist.indexOf(id);
+            if (index > -1) {
+                userData.wishlist.splice(index, 1);
+                showToast('Removed from wishlist');
+            } else {
+                userData.wishlist.push(id);
+                showToast('Added to wishlist! ❤️');
+            }
+            updateStats();
+            renderProducts();
+        }
+
+        function redeemProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (userData.xp >= product.price) {
+                userData.xp -= product.price;
+                product.claimed = true;
+                userData.rewardsClaimed++;
+                
+                updateStats();
+                renderProducts();
+                showSuccessModal(product);
+            }
+        }
+
+        function showSuccessModal(product) {
+            document.getElementById('modalDesc').textContent = `You've redeemed "${product.title}" for ${product.price} XP!`;
+            document.getElementById('successModal').classList.add('active');
+            
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                const colors = ['#FFD700', '#ff4757', '#4FC3F7', '#4CAF50', '#9C27B0'];
+                confetti.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    width: 10px;
+                    height: 10px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    border-radius: 50%;
+                    animation: confetti 1s ease-out forwards;
+                    z-index: 2000;
+                `;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 1000);
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('active');
+        }
+
+        function shareSuccess() {
+            showToast('Share link copied! 📤');
+            closeModal();
+        }
+
+        function updateStats() {
+            document.getElementById('currentXp').textContent = userData.xp;
+            document.getElementById('totalXp').textContent = userData.xp;
+            document.getElementById('rewardsClaimed').textContent = userData.rewardsClaimed;
+            document.getElementById('wishlistCount').textContent = userData.wishlist.length;
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastText').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        renderProducts();
+        updateStats();
+
+        // Run syncUI on load
+        syncUI();
+
+        function toggleMenu() {
+            document.getElementById('dropdownMenu').classList.toggle('show');
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.menu-btn') && !e.target.closest('.dropdown-menu')) {
+                document.getElementById('dropdownMenu').classList.remove('show');
+            }
+        });
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
