@@ -27,6 +27,55 @@
             color: var(--white);
         }
 
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--white);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Floating Stars Decorations */
+        .decor-star {
+            position: fixed;
+            color: var(--gold);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        .decor-star:nth-child(1) { top: 15%; left: 5%; font-size: 1.5rem; animation-delay: 0s; }
+        .decor-star:nth-child(2) { top: 30%; right: 8%; font-size: 2rem; animation-delay: 0.5s; }
+        .decor-star:nth-child(3) { top: 60%; left: 3%; font-size: 1.8rem; animation-delay: 1s; }
+        .decor-star:nth-child(4) { top: 80%; right: 5%; font-size: 2.2rem; animation-delay: 1.5s; }
+        .decor-star:nth-child(5) { top: 45%; left: 8%; font-size: 1.4rem; animation-delay: 2s; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.1; transform: scale(0.9); }
+            50% { opacity: 0.25; transform: scale(1.1); }
+        }
+
+        /* Music Notes */
+        .decor-note {
+            position: fixed;
+            color: rgba(255, 255, 255, 0.12);
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 0;
+            animation: floatNote 5s ease-in-out infinite;
+        }
+
+        .decor-note:nth-child(6) { top: 20%; right: 15%; animation-delay: 0s; }
+        .decor-note:nth-child(7) { top: 55%; left: 10%; animation-delay: 1s; }
+        .decor-note:nth-child(8) { top: 75%; right: 12%; animation-delay: 2s; }
+
+        @keyframes floatNote {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
         /* Header */
         header {
             position: fixed;
@@ -647,6 +696,16 @@
     </style>
 </head>
 <body>
+    <!-- Decorative Elements -->
+    <span class="decor-star">⭐</span>
+    <span class="decor-star">⭐</span>
+    <span class="decor-star">⭐</span>
+    <span class="decor-star">⭐</span>
+    <span class="decor-star">⭐</span>
+    <span class="decor-note">♪</span>
+    <span class="decor-note">♫</span>
+    <span class="decor-note">♬</span>
+    
     <header>
         <div class="header-content">
             <a href="index.html" class="logo"><img src="logo-stage.webp" alt="STAGE"></a>
@@ -686,19 +745,19 @@
                 <div class="hero-text-overlay">
                     <h1 class="stage-title">STAGE</h1>
                     <p class="rise-text">Rise of The Performer</p>
-                    <p class="description-text">Embark on an exciting adventure to become a stage star!</p>
+                    <p class="description-text">Mulai petualanganmu untuk menjadi bintang panggung!</p>
                 </div>
             </div>
             
-            <a href="mission.html" class="cta-button">Start Your Stage Journey</a>
+            <a href="mission.html" class="cta-button">Mulai Perjalanan Stage Kamu</a>
         </div>
     </section>
 
     <section class="level-section">
         <div class="level-container">
             <div class="level-header">
-                <span class="current-level">Current Level: <strong id="levelText">New Talent</strong></span>
-                <span class="xp-counter">XP: <span id="homeXp">0</span> / 1000</span>
+                <span class="current-level">Level: <strong id="levelText">New Talent</strong></span>
+                <span class="xp-counter">XP: <span id="homeXp">0</span></span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="homeProgress" style="width: 0%"></div>
@@ -839,20 +898,29 @@
             
             if (homeXpEl) homeXpEl.textContent = currentXP;
             
-            // Update progress bar
-            var progress = Math.min((currentXP / 1000) * 100, 100);
+            var progress = Math.min((currentXP / 3000) * 100, 100);
             if (homeProgressEl) homeProgressEl.style.width = progress + '%';
             
-            // Update level text
-            if (currentXP >= 2000) {
-                if (levelTextEl) levelTextEl.textContent = 'Master Performer';
-            } else if (currentXP >= 1000) {
-                if (levelTextEl) levelTextEl.textContent = 'Intermediate Performer';
+            if (currentXP >= 3000) {
+                if (levelTextEl) levelTextEl.textContent = 'Rising Star';
+            } else if (currentXP >= 1001) {
+                if (levelTextEl) levelTextEl.textContent = 'Performer';
             } else {
                 if (levelTextEl) levelTextEl.textContent = 'New Talent';
             }
+            
+            // Update XP counter text based on current level
+            var xpCounter = document.querySelector('.xp-counter');
+            if (xpCounter) {
+                if (currentXP >= 3000) {
+                    xpCounter.innerHTML = 'XP: <span id="homeXp">' + currentXP + '</span> (Max Level)';
+                } else if (currentXP >= 1001) {
+                    xpCounter.innerHTML = 'XP: <span id="homeXp">' + currentXP + '</span> / 3000';
+                } else {
+                    xpCounter.innerHTML = 'XP: <span id="homeXp">' + currentXP + '</span> / 1000';
+                }
+            }
 
-            // Sync UI
             syncUI();
         });
 
