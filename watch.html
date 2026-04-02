@@ -829,7 +829,7 @@
 
         @media (max-width: 768px) {
             .header-content {
-                flex-wrap: wrap;
+                flex-wrap: nowrap;
                 gap: 10px;
                 padding: 0 15px;
             }
@@ -840,9 +840,9 @@
             
             .search-container {
                 order: 2;
-                width: 100%;
-                max-width: 100%;
-                margin-top: 8px;
+                flex: 1;
+                max-width: 200px;
+                margin: 0 10px;
             }
             
             .menu-btn {
