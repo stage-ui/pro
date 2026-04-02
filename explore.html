@@ -1040,12 +1040,8 @@
                 
                 showMissionNotification('🎭 Explore STAGE completed!<br>+10 XP', 10, 'btnExplore');
                 
-                // Sync UI before redirect
+                // Sync UI
                 syncUI();
-                
-                setTimeout(function() {
-                    window.location.href = 'mission.html';
-                }, 1500);
             }, 10000);
         }
 
