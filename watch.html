@@ -829,24 +829,38 @@
 
         @media (max-width: 768px) {
             .header-content {
-                flex-wrap: nowrap;
-                gap: 10px;
-                padding: 0 15px;
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                gap: 8px;
+                padding: 0 10px;
+                align-items: center;
             }
             
             .logo {
-                order: 1;
+                /* no extra rules needed */
             }
             
             .search-container {
-                order: 2;
-                flex: 1;
-                max-width: 200px;
-                margin: 0 10px;
+                width: 100%;
+                box-sizing: border-box;
+                margin: 0 5px;
+            }
+            .search-input {
+                padding: 8px 12px 8px 35px;
+                font-size: 0.8rem;
             }
             
             .menu-btn {
-                order: 3;
+                /* no extra rules needed */
+            }
+            
+            .dropdown-menu {
+                right: 0;
+                left: auto;
+                min-width: 160px;
+                margin-right: 5px;
+                box-sizing: border-box;
+                z-index: 300;
             }
             
             .video-wrapper {
@@ -1448,25 +1462,6 @@
             window.location.href = 'login.html';
         }
     </script>
-    <script>
-        // Make sure dropdown has logout option
-        var dropdown = document.getElementById('dropdownMenu');
-        if (dropdown) {
-            var logoutLink = document.createElement('a');
-            logoutLink.href = '#';
-            logoutLink.onclick = function() { window.location.href = 'login.html'; };
-            logoutLink.textContent = '🚪 Logout';
-            logoutLink.style.color = '#ff6b6b';
-            logoutLink.style.cursor = 'pointer';
-            dropdown.appendChild(logoutLink);
-        }
 
-        function logout() {
-            sessionStorage.clear();
-            window.location.href = 'login.html';
-        }
-    </script>
-        });
-    </script>
 </body>
 </html>
