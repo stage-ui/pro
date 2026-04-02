@@ -32,6 +32,53 @@
             overflow-x: hidden;
         }
 
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--white);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Floating Decorations */
+        .explore-decor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.12;
+        }
+
+        .explore-sparkle {
+            color: var(--gold);
+            font-size: 1.5rem;
+            animation: sparkle 2.5s ease-in-out infinite;
+        }
+
+        .explore-sparkle:nth-child(1) { top: 12%; left: 5%; }
+        .explore-sparkle:nth-child(2) { top: 30%; right: 8%; animation-delay: 0.5s; }
+        .explore-sparkle:nth-child(3) { top: 55%; left: 3%; animation-delay: 1s; }
+        .explore-sparkle:nth-child(4) { top: 78%; right: 6%; animation-delay: 1.5s; }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.1; transform: scale(0.8); }
+            50% { opacity: 0.25; transform: scale(1.2); }
+        }
+
+        .explore-note {
+            color: var(--white);
+            font-size: 1.6rem;
+            animation: floatNote 5s ease-in-out infinite;
+        }
+
+        .explore-note:nth-child(5) { top: 20%; right: 12%; animation-delay: 0s; }
+        .explore-note:nth-child(6) { top: 65%; left: 8%; animation-delay: 1.5s; }
+
+        @keyframes floatNote {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -633,6 +680,14 @@
     </style>
 </head>
 <body>
+    <!-- Decorative Elements -->
+    <span class="explore-decor explore-sparkle">✦</span>
+    <span class="explore-decor explore-sparkle">✦</span>
+    <span class="explore-decor explore-sparkle">✦</span>
+    <span class="explore-decor explore-sparkle">✦</span>
+    <span class="explore-decor explore-note">🎵</span>
+    <span class="explore-decor explore-note">🎶</span>
+
     <header>
         <div class="container header-content">
             <a href="index.html" class="logo"><img src="logo-stage.webp" alt="STAGE" style="height: 32px;"></a>
