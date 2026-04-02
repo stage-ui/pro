@@ -38,6 +38,70 @@
             overflow: hidden;
         }
 
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            color: var(--white);
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Floating Decorations */
+        .watch-decor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.1;
+        }
+
+        .watch-star {
+            color: var(--gold);
+            font-size: 1.5rem;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        .watch-star:nth-child(1) { top: 15%; left: 3%; }
+        .watch-star:nth-child(2) { top: 35%; right: 5%; animation-delay: 0.5s; }
+        .watch-star:nth-child(3) { top: 60%; left: 4%; animation-delay: 1s; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.08; }
+            50% { opacity: 0.2; }
+        }
+
+        .watch-note {
+            color: var(--white);
+            font-size: 1.8rem;
+            animation: floatNote 6s ease-in-out infinite;
+        }
+
+        .watch-note:nth-child(4) { top: 25%; right: 8%; animation-delay: 0s; }
+        .watch-note:nth-child(5) { top: 70%; left: 6%; animation-delay: 1.5s; }
+
+        @keyframes floatNote {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(5deg); }
+        }
+
+        /* Film strip decoration */
+        .film-decor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 15px,
+                rgba(255, 255, 255, 0.03) 15px,
+                rgba(255, 255, 255, 0.03) 30px
+            );
+            pointer-events: none;
+            z-index: 0;
+        }
+
         /* Scroll Snap Container */
         .scroll-container {
             height: 100vh;
@@ -893,6 +957,14 @@
     </style>
 </head>
 <body>
+    <!-- Decorative Elements -->
+    <span class="watch-decor watch-star">⭐</span>
+    <span class="watch-decor watch-star">⭐</span>
+    <span class="watch-decor watch-star">⭐</span>
+    <span class="watch-decor watch-note">🎵</span>
+    <span class="watch-decor watch-note">🎶</span>
+    <div class="film-decor"></div>
+
     <header>
         <div class="header-content">
             <a href="index.html" class="logo"><img src="logo-stage.webp" alt="STAGE" style="height: 30px;"></a>
