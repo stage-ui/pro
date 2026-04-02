@@ -35,6 +35,64 @@
             color: var(--white);
         }
 
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--white);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Floating Decorations */
+        .reward-decor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.12;
+        }
+
+        .reward-star {
+            color: var(--gold);
+            animation: glow 2.5s ease-in-out infinite;
+        }
+
+        .reward-star:nth-child(1) { top: 10%; left: 5%; font-size: 1.8rem; }
+        .reward-star:nth-child(2) { top: 25%; right: 8%; font-size: 2rem; animation-delay: 0.5s; }
+        .reward-star:nth-child(3) { top: 55%; left: 3%; font-size: 1.5rem; animation-delay: 1s; }
+        .reward-star:nth-child(4) { top: 75%; right: 6%; font-size: 2.2rem; animation-delay: 1.5s; }
+
+        @keyframes glow {
+            0%, 100% { opacity: 0.1; transform: scale(0.9); }
+            50% { opacity: 0.25; transform: scale(1.15); }
+        }
+
+        .reward-note {
+            color: var(--white);
+            font-size: 1.8rem;
+            animation: floatUp 6s ease-in-out infinite;
+        }
+
+        .reward-note:nth-child(5) { top: 15%; right: 12%; animation-delay: 0s; }
+        .reward-note:nth-child(6) { top: 65%; left: 8%; animation-delay: 1.5s; }
+
+        @keyframes floatUp {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* Trophy glow */
+        .trophy-glow {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            top: 50%;
+            right: -50px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
         header {
             position: fixed;
             top: 0;
@@ -754,6 +812,15 @@
     </style>
 </head>
 <body>
+    <!-- Decorative Elements -->
+    <span class="reward-decor reward-star">⭐</span>
+    <span class="reward-decor reward-star">⭐</span>
+    <span class="reward-decor reward-star">⭐</span>
+    <span class="reward-decor reward-star">⭐</span>
+    <span class="reward-decor reward-note">🎵</span>
+    <span class="reward-decor reward-note">🎶</span>
+    <div class="trophy-glow"></div>
+
     <header>
         <div class="header-content">
             <a href="index.html" class="logo"><img src="logo-stage.webp" alt="STAGE" style="height: 32px;"></a>
@@ -793,11 +860,11 @@
             <div class="stats-grid">
                 <div class="stat-box">
                     <div class="stat-value" id="totalXp">0</div>
-                    <div class="stat-label">Total XP</div>
+                    <div class="stat-label">Total Points</div>
                 </div>
                 <div class="stat-box">
                     <div class="stat-value" id="rewardsClaimed">0</div>
-                    <div class="stat-label">Claimed</div>
+                    <div class="stat-label">Sudah Ditukar</div>
                 </div>
                 <div class="stat-box">
                     <div class="stat-value" id="wishlistCount">0</div>
@@ -808,16 +875,26 @@
 
         <div class="filter-section">
             <div class="filter-tabs">
-                <button class="filter-tab active" onclick="filterProducts('all')">All</button>
+                <button class="filter-tab active" onclick="filterProducts('all')">Semua</button>
                 <button class="filter-tab" onclick="filterProducts('merchandise')">Merchandise</button>
-                <button class="filter-tab" onclick="filterProducts('ticket')">Tickets</button>
-                <button class="filter-tab" onclick="filterProducts('workshop')">Workshop</button>
-                <button class="filter-tab" onclick="filterProducts('digital')">Digital</button>
+                <button class="filter-tab" onclick="filterProducts('special')">Spesial</button>
+                <button class="filter-tab" onclick="showRedemptionHistory()" style="background: rgba(255,215,0,0.2); border: 1px solid #FFD700;">📜 Riwayat</button>
             </div>
             
             <div class="wishlist-toggle" id="wishlistToggle" onclick="toggleWishlist()">
                 <span>❤️</span>
                 <span>Wishlist</span>
+            </div>
+        </div>
+
+        <!-- Redemption History Section -->
+        <div id="redemptionHistory" style="display: none; margin-bottom: 30px;">
+            <div style="background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 25px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="font-size: 1.3rem;">📜 Riwayat Penukaran</h3>
+                    <button onclick="hideRedemptionHistory()" style="background: var(--accent); border: none; color: white; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-family: 'Poppins';">← Kembali</button>
+                </div>
+                <div id="historyList"></div>
             </div>
         </div>
 
@@ -832,11 +909,11 @@
     <div class="modal-overlay" id="successModal">
         <div class="modal-content">
             <div class="modal-icon">🎉</div>
-            <h2 class="modal-title">Congratulations!</h2>
-            <p class="modal-desc" id="modalDesc">You've successfully redeemed your reward!</p>
+            <h2 class="modal-title">Selamat!</h2>
+            <p class="modal-desc" id="modalDesc">Kamu telah berhasil menukarkan hadiah!</p>
             <div class="modal-actions">
-                <button class="modal-btn secondary" onclick="closeModal()">Close</button>
-                <button class="modal-btn primary" onclick="shareSuccess()">Share 🎁</button>
+                <button class="modal-btn secondary" onclick="closeModal()">Tutup</button>
+                <button class="modal-btn primary" onclick="shareSuccess()">Bagikan 🎁</button>
             </div>
         </div>
     </div>
@@ -844,8 +921,8 @@
     <div class="toast" id="toast">
         <span class="toast-icon">✅</span>
         <div class="toast-content">
-            <h4>Success!</h4>
-            <p id="toastText">Item redeemed</p>
+            <h4>Berhasil!</h4>
+            <p id="toastText">Item ditukarkan</p>
         </div>
     </div>
 
@@ -926,7 +1003,7 @@
                 title: "STAGE T-Shirt Edition 1",
                 category: "merchandise",
                 desc: "Official STAGE merchandise - premium cotton t-shirt with embroidered logo. Limited edition design!",
-                price: 2500,
+                price: 1500,
                 originalPrice: 3500,
                 image: "tshirt1.webp",
                 badge: "exclusive",
@@ -937,7 +1014,7 @@
                 title: "STAGE T-Shirt Edition 2",
                 category: "merchandise",
                 desc: "Official STAGE merchandise - premium cotton t-shirt with modern design. Collect both editions!",
-                price: 2500,
+                price: 1500,
                 originalPrice: 3500,
                 image: "tshirt2.webp",
                 badge: "exclusive",
@@ -948,7 +1025,7 @@
                 title: "STAGE Tumbler Premium",
                 category: "merchandise",
                 desc: "High-quality stainless steel tumbler with STAGE logo. Keep your drinks hot or cold for hours.",
-                price: 1800,
+                price: 750,
                 originalPrice: 2500,
                 image: "tumbler1.webp",
                 badge: "bestseller",
@@ -959,7 +1036,7 @@
                 title: "STAGE Tumbler Sport",
                 category: "merchandise",
                 desc: "Sport-style tumbler with flip lid. Perfect for rehearsals and backstage activities.",
-                price: 1800,
+                price: 750,
                 originalPrice: 2500,
                 image: "tumbler2.webp",
                 badge: "bestseller",
@@ -970,7 +1047,7 @@
                 title: "STAGE Keychain Collectible",
                 category: "merchandise",
                 desc: "Elegant metal keychain with STAGE logo. A must-have for every STAGE enthusiast!",
-                price: 800,
+                price: 400,
                 originalPrice: 1200,
                 image: "keychain.webp",
                 badge: "new",
@@ -981,121 +1058,32 @@
                 title: "STAGE Sticker Pack",
                 category: "merchandise",
                 desc: "Set of 5 premium vinyl stickers featuring STAGE logo and performance art designs",
-                price: 300,
+                price: 350,
                 originalPrice: 500,
                 image: "sticker.jpeg",
                 badge: "new",
                 claimed: false
             },
             {
-                id: 6,
-                title: "Broadway Show Ticket",
-                category: "ticket",
-                desc: "VIP access to our grand musical production 'Phantom of the Campus'",
-                price: 300,
-                originalPrice: 450,
-                icon: "🎟️",
-                badge: "limited",
-                claimed: false
-            },
-
-            {
-                id: 6,
-                title: "Broadway Show Ticket",
-                category: "ticket",
-                desc: "VIP access to our grand musical production 'Phantom of the Campus'",
-                price: 300,
-                originalPrice: 450,
-                icon: "🎟️",
+                id: 12,
+                title: "Kesempatan Tampil",
+                category: "special",
+                desc: "Kesempatan tampil di atas panggung STAGE! Tunjukkan talentamu kepada komunitas.",
+                price: 2500,
+                originalPrice: 5000,
+                icon: "🎤",
                 badge: "limited",
                 claimed: false
             },
             {
-                id: 3,
-                title: "Acting Workshop Premium",
-                category: "workshop",
-                desc: "2-hour intensive acting workshop with professional coaches",
-                price: 200,
-                originalPrice: 350,
-                icon: "🎭",
-                badge: "new",
-                claimed: false
-            },
-            {
-                id: 4,
+                id: 13,
                 title: "STAGE Digital Wallpaper Pack",
-                category: "digital",
-                desc: "20 exclusive 4K wallpapers featuring STAGE performances",
-                price: 50,
+                category: "merchandise",
+                desc: "Koleksi wallpaper eksklusif 4K menampilkan performance STAGE. Modal baru untuk device kamu!",
+                price: 10,
                 originalPrice: 100,
                 icon: "🖼️",
-                badge: null,
-                claimed: false
-            },
-            {
-                id: 5,
-                title: "STAGE Tote Bag",
-                category: "merchandise",
-                desc: "Eco-friendly canvas tote bag with STAGE logo print",
-                price: 150,
-                originalPrice: 250,
-                icon: "👜",
-                badge: null,
-                claimed: false
-            },
-            {
-                id: 6,
-                title: "Backstage Tour",
-                category: "ticket",
-                desc: "Exclusive behind-the-scenes tour of our performance venue",
-                price: 100,
-                originalPrice: 200,
-                icon: "🚪",
                 badge: "new",
-                claimed: false
-            },
-            {
-                id: 7,
-                title: "Dance Masterclass",
-                category: "workshop",
-                desc: "Learn choreography from our professional dance troupe",
-                price: 250,
-                originalPrice: 400,
-                icon: "💃",
-                badge: "hot",
-                claimed: false
-            },
-            {
-                id: 8,
-                title: "STAGE Pin Collection",
-                category: "merchandise",
-                desc: "Set of 5 exclusive enamel pins from STAGE productions",
-                price: 80,
-                originalPrice: 150,
-                icon: "📌",
-                badge: null,
-                claimed: false
-            },
-            {
-                id: 9,
-                title: "Soundtrack Album",
-                category: "digital",
-                desc: "Digital album with all songs from 'Indonesia Mengajar' musical",
-                price: 75,
-                originalPrice: 120,
-                icon: "💿",
-                badge: null,
-                claimed: false
-            },
-            {
-                id: 10,
-                title: "Meet & Greet Pass",
-                category: "ticket",
-                desc: "Meet the cast after the show - photo and签名 session",
-                price: 400,
-                originalPrice: 600,
-                icon: "🤝",
-                badge: "limited",
                 claimed: false
             }
         ];
@@ -1130,7 +1118,7 @@
                 
                 let badge = '';
                 if (product.badge) {
-                    badge = `<span class="product-badge badge-${product.badge}">${product.badge === 'new' ? 'NEW' : product.badge === 'hot' ? 'HOT' : product.badge === 'exclusive' ? 'EXCLUSIVE' : product.badge === 'bestseller' ? 'BESTSELLER' : 'LIMITED'}</span>`;
+                    badge = `<span class="product-badge badge-${product.badge}">${product.badge === 'new' ? 'BARU' : product.badge === 'hot' ? 'HOT' : product.badge === 'exclusive' ? 'EKSKLUSIF' : product.badge === 'bestseller' ? 'TERLARIS' : 'TERBATAS'}</span>`;
                 }
                 
                 const imageHTML = product.image 
@@ -1156,11 +1144,11 @@
                                     ${product.originalPrice ? `<span class="price-original">${product.originalPrice}</span>` : ''}
                                 </div>
                             </div>
-                            ${!canAfford && !product.claimed ? `<div class="points-needed">💡 ${pointsNeeded} XP more to get this!</div>` : ''}
+                            ${!canAfford && !product.claimed ? `<div class="points-needed">💡 Butuh ${pointsNeeded} XP lagi untuk mendapatkan ini!</div>` : ''}
                             <button class="redeem-btn ${product.claimed ? 'redeemed' : ''}" 
                                 onclick="redeemProduct(${product.id})" 
                                 ${product.claimed || !canAfford ? 'disabled' : ''}>
-                                ${product.claimed ? '✓ Claimed' : canAfford ? 'Redeem Now' : 'Not Enough XP'}
+                                ${product.claimed ? '✓ Sudah Ditukar' : canAfford ? 'Tukar Sekarang' : 'XP Tidak Cukup'}
                             </button>
                         </div>
                     </div>
@@ -1169,10 +1157,14 @@
         }
 
         function filterProducts(category) {
+            // Hide history when switching to other filters
+            document.getElementById('redemptionHistory').style.display = 'none';
+            document.getElementById('productsGrid').style.display = 'grid';
+            
             currentFilter = category;
             document.querySelectorAll('.filter-tab').forEach(tab => {
                 tab.classList.remove('active');
-                if (tab.textContent.toLowerCase().includes(category === 'all' ? 'all' : category)) {
+                if (tab.textContent.toLowerCase().includes(category === 'all' ? 'semua' : category)) {
                     tab.classList.add('active');
                 }
             });
@@ -1180,6 +1172,9 @@
         }
 
         function toggleWishlist() {
+            document.getElementById('redemptionHistory').style.display = 'none';
+            document.getElementById('productsGrid').style.display = 'grid';
+            
             showWishlist = !showWishlist;
             const toggle = document.getElementById('wishlistToggle');
             toggle.classList.toggle('active', showWishlist);
@@ -1190,10 +1185,10 @@
             const index = userData.wishlist.indexOf(id);
             if (index > -1) {
                 userData.wishlist.splice(index, 1);
-                showToast('Removed from wishlist');
+                showToast('Dihapus dari wishlist');
             } else {
                 userData.wishlist.push(id);
-                showToast('Added to wishlist! ❤️');
+                showToast('Ditambahkan ke wishlist! ❤️');
             }
             updateStats();
             renderProducts();
@@ -1208,30 +1203,44 @@
                 
                 updateStats();
                 renderProducts();
-                showSuccessModal(product);
-            }
-        }
-
-        function showSuccessModal(product) {
-            document.getElementById('modalDesc').textContent = `You've redeemed "${product.title}" for ${product.price} XP!`;
-            document.getElementById('successModal').classList.add('active');
-            
-            for (let i = 0; i < 30; i++) {
-                const confetti = document.createElement('div');
-                const colors = ['#FFD700', '#ff4757', '#4FC3F7', '#4CAF50', '#9C27B0'];
-                confetti.style.cssText = `
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    width: 10px;
-                    height: 10px;
-                    background: ${colors[Math.floor(Math.random() * colors.length)]};
-                    border-radius: 50%;
-                    animation: confetti 1s ease-out forwards;
-                    z-index: 2000;
+                
+                const adminWhatsApp = "https://wa.link/2pxwmp";
+                const message = encodeURIComponent(`Hai admin STAGE! Saya baru saja menukarkan:\n\n🎁 Item: ${product.title}\n⭐ Points yang dihabiskan: ${product.price}\n\nMohon proses redeem saya. Terima kasih!`);
+                
+                const fullUrl = adminWhatsApp + "?text=" + message;
+                
+                document.getElementById('modalDesc').innerHTML = `
+                    <div style="text-align: left; margin-bottom: 20px;">
+                        <p style="margin-bottom: 15px;">🎉 Selamat! Kamu telah menukarkan <strong>"${product.title}"</strong> dengan <strong>${product.price} Points</strong>!</p>
+                        <p style="margin-bottom: 10px; font-size: 0.9rem; opacity: 0.9;">📋 <strong>Langkah selanjutnya:</strong></p>
+                        <ol style="padding-left: 20px; font-size: 0.85rem; line-height: 1.8;">
+                            <li>Klik tombol "Hubungi Admin" di bawah ini</li>
+                            <li>Kamu akan diarahkan ke WhatsApp admin</li>
+                            <li>Kirim pesan dengan detail redeem kamu</li>
+                            <li>Screenshot bukti ini dan kirim ke admin untuk diproses</li>
+                        </ol>
+                    </div>
                 `;
-                document.body.appendChild(confetti);
-                setTimeout(() => confetti.remove(), 1000);
+                
+                const modalActions = document.querySelector('.modal-actions');
+                modalActions.innerHTML = `
+                    <button class="modal-btn secondary" onclick="closeModal()" style="flex: 1;">Tutup</button>
+                    <button class="modal-btn primary" onclick="window.open('${fullUrl}', '_blank')" style="flex: 1;">📱 Hubungi Admin</button>
+                `;
+                
+                document.getElementById('successModal').classList.add('active');
+                
+                // Also save redemption history
+                const redemptionHistory = JSON.parse(localStorage.getItem('redemptionHistory')) || [];
+                const username = sessionStorage.getItem('username') || 'User';
+                redemptionHistory.push({
+                    user: username,
+                    productTitle: product.title,
+                    pointsSpent: product.price,
+                    date: new Date().toISOString(),
+                    status: 'pending'
+                });
+                localStorage.setItem('redemptionHistory', JSON.stringify(redemptionHistory));
             }
         }
 
@@ -1240,7 +1249,7 @@
         }
 
         function shareSuccess() {
-            showToast('Share link copied! 📤');
+            showToast('Link share berhasil disalin! 📤');
             closeModal();
         }
 
@@ -1276,6 +1285,57 @@
         function logout() {
             sessionStorage.clear();
             window.location.href = 'login.html';
+        }
+
+        function showRedemptionHistory() {
+            const historySection = document.getElementById('redemptionHistory');
+            const historyList = document.getElementById('historyList');
+            const history = JSON.parse(localStorage.getItem('redemptionHistory')) || [];
+            const currentUser = sessionStorage.getItem('username');
+            
+            // Get user-specific history
+            const userHistory = history.filter(h => h.user === currentUser);
+            
+            if (userHistory.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; opacity: 0.7; padding: 30px;">Belum ada riwayat penukaran</p>';
+            } else {
+                const username = sessionStorage.getItem('username') || 'User';
+                
+                let html = '';
+                userHistory.forEach((item, index) => {
+                    const date = new Date(item.date);
+                    const formattedDate = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    
+                    html += `
+                        <div style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin-bottom: 15px; border-left: 4px solid ${item.status === 'pending' ? '#FFD700' : '#4CAF50'};">
+                            <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 10px;">
+                                <div>
+                                    <h4 style="font-size: 1rem; margin-bottom: 5px;">🎁 ${item.productTitle}</h4>
+                                    <p style="font-size: 0.85rem; opacity: 0.8;">📅 ${formattedDate}</p>
+                                    <p style="font-size: 0.85rem; color: #FFD700; margin-top: 5px;">⭐ ${item.pointsSpent} Points</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <span style="padding: 5px 12px; background: ${item.status === 'pending' ? 'rgba(255,215,0,0.2)' : 'rgba(76,175,80,0.2)'}; border-radius: 15px; font-size: 0.75rem; color: ${item.status === 'pending' ? '#FFD700' : '#4CAF50'};">
+                                        ${item.status === 'pending' ? '⏳ Menunggu' : '✓ Selesai'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                historyList.innerHTML = html;
+            }
+            
+            historySection.style.display = 'block';
+            document.getElementById('productsGrid').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'none';
+        }
+
+        function hideRedemptionHistory() {
+            document.getElementById('redemptionHistory').style.display = 'none';
+            document.getElementById('productsGrid').style.display = 'grid';
+            renderProducts();
         }
     </script>
 </body>
