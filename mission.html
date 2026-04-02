@@ -33,6 +33,63 @@
             color: var(--white);
         }
 
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--white);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Floating Decorations */
+        .mission-decor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.12;
+        }
+
+        .mission-icon {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .mission-icon:nth-child(1) { top: 12%; left: 4%; font-size: 2rem; }
+        .mission-icon:nth-child(2) { top: 28%; right: 6%; font-size: 1.8rem; animation-delay: 0.5s; }
+        .mission-icon:nth-child(3) { top: 50%; left: 3%; font-size: 2.2rem; animation-delay: 1s; }
+        .mission-icon:nth-child(4) { top: 72%; right: 5%; font-size: 1.6rem; animation-delay: 1.5s; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.1; transform: scale(0.9); }
+            50% { opacity: 0.25; transform: scale(1.1); }
+        }
+
+        .mission-note {
+            color: var(--white);
+            font-size: 1.5rem;
+            animation: floatNote 5s ease-in-out infinite;
+        }
+
+        .mission-note:nth-child(5) { top: 18%; right: 10%; animation-delay: 0s; }
+        .mission-note:nth-child(6) { top: 60%; left: 8%; animation-delay: 1.5s; }
+
+        @keyframes floatNote {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+        }
+
+        /* Target/Crosshair decoration */
+        .target-decor {
+            position: fixed;
+            top: 40%;
+            right: -30px;
+            width: 100px;
+            height: 100px;
+            border: 3px solid rgba(255, 215, 0, 0.08);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
         header {
             position: fixed;
             top: 0;
@@ -703,6 +760,15 @@
     </style>
 </head>
 <body>
+    <!-- Decorative Elements -->
+    <span class="mission-decor mission-icon">🎯</span>
+    <span class="mission-decor mission-icon">🎖️</span>
+    <span class="mission-decor mission-icon">🏆</span>
+    <span class="mission-decor mission-icon">⭐</span>
+    <span class="mission-decor mission-note">♪</span>
+    <span class="mission-decor mission-note">♫</span>
+    <div class="target-decor"></div>
+
     <header>
         <div class="header-content">
             <div class="header-left">
@@ -728,15 +794,15 @@
         
         <div class="level-bar-section">
             <div class="level-bar-header">
-                <span>Current: <strong id="levelText">New Talent</strong></span>
-                <span><span id="xpProgress">0</span> / 1000 XP</span>
+                <span>Level: <strong id="levelText">New Talent</strong></span>
+                <span><span id="xpProgress">0</span> XP</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 0%"></div>
             </div>
             <div class="next-level-info">
                 <span>🎖️</span>
-                <span>Next Level: <strong>Intermediate Performer</strong> (1000 XP more)</span>
+                <span id="nextLevelText">Next Level: Performer (1001 XP needed)</span>
             </div>
         </div>
         
@@ -763,81 +829,81 @@
                 <div class="mission-card">
                     <div class="mission-header">
                         <span class="mission-icon">🔍</span>
-                        <span class="mission-title">Explore STAGE</span>
+                        <span class="mission-title">Eksplorasi STAGE</span>
                     </div>
-                    <p class="mission-desc">Visit the Explore STAGE page and learn about our program for at least 10 seconds.</p>
-                    <span class="mission-xp">+10 XP</span>
-                    <button class="mission-btn" id="btnExplore" onclick="startExploreMission()">Start Mission</button>
+                    <p class="mission-desc">Kunjungi halaman Eksplorasi STAGE dan pelajari program kami selama minimal 10 detik.</p>
+                    <span class="mission-xp">+50 XP</span>
+                    <button class="mission-btn" id="btnExplore" onclick="startExploreMission()">Mulai Misi</button>
                 </div>
 
                 <div class="mission-card">
                     <div class="mission-header">
                         <span class="mission-icon">🎬</span>
-                        <span class="mission-title">Watch Performance</span>
+                        <span class="mission-title">Tonton Pertunjukan</span>
                     </div>
-                    <p class="mission-desc">Watch at least one full performance video on the Watch Performance page.</p>
-                    <span class="mission-xp">+50 XP</span>
-                    <button class="mission-btn" id="btnWatch" onclick="startWatchMission()">Start Mission</button>
+                    <p class="mission-desc">Tonton setidaknya satu video pertunjukan lengkap di halaman Tonton Pertunjukan.</p>
+                    <span class="mission-xp">+5 XP</span>
+                    <button class="mission-btn" id="btnWatch" onclick="startWatchMission()">Mulai Misi</button>
                 </div>
 
                 <div class="mission-card">
                     <div class="mission-header">
                         <span class="mission-icon">📝</span>
-                        <span class="mission-title">Stage Quiz</span>
+                        <span class="mission-title">Kuis STAGE</span>
                     </div>
-                    <p class="mission-desc">Test your knowledge about STAGE! Answer all questions correctly to earn max XP.</p>
-                    <span class="mission-xp">+100 XP</span>
-                    <button class="mission-btn" id="btnQuiz" onclick="openQuiz()">Start Mission</button>
+                    <p class="mission-desc">Uji pengetahuanmu tentang STAGE! Jawab semua pertanyaan dengan benar untuk XP maksimal.</p>
+                    <span class="mission-xp">+300 XP</span>
+                    <button class="mission-btn" id="btnQuiz" onclick="openQuiz()">Mulai Misi</button>
                 </div>
 
                 <div class="mission-card">
                     <div class="mission-header">
                         <span class="mission-icon">📹</span>
-                        <span class="mission-title">Upload Talent</span>
+                        <span class="mission-title">Unggah Talentamu</span>
                     </div>
-                    <p class="mission-desc">Upload a video showcasing your performance talent to the STAGE community.</p>
-                    <span class="mission-xp">+75 XP</span>
-                    <button class="mission-btn" id="btnUpload" onclick="openUploadModal()">Start Mission</button>
+                    <p class="mission-desc">Unggah video yang menampilkan talentamu ke komunitas STAGE.</p>
+                    <span class="mission-xp">+100 XP</span>
+                    <button class="mission-btn" id="btnUpload" onclick="openUploadModal()">Mulai Misi</button>
                 </div>
 
                 <div class="mission-card">
                     <div class="mission-header">
                         <span class="mission-icon">❤️</span>
-                        <span class="mission-title">Like a Performance</span>
+                        <span class="mission-title">Suka Pertunjukan</span>
                     </div>
-                    <p class="mission-desc">Show your support by liking a performance video you enjoy.</p>
+                    <p class="mission-desc">Tunjukkan dukunganmu dengan menyukai video pertunjukan yang kamu suka.</p>
                     <span class="mission-xp">+5 XP</span>
-                    <button class="mission-btn" id="btnLike" onclick="startLikeMission()">Start Mission</button>
+                    <button class="mission-btn" id="btnLike" onclick="startLikeMission()">Mulai Misi</button>
                 </div>
 
                 <div class="mission-card">
                     <div class="mission-header">
                         <span class="mission-icon">💬</span>
-                        <span class="mission-title">Leave a Comment</span>
+                        <span class="mission-title">Tulis Komentar</span>
                     </div>
-                    <p class="mission-desc">Share your thoughts by commenting on a performance video.</p>
-                    <span class="mission-xp">+10 XP</span>
-                    <button class="mission-btn" id="btnComment" onclick="startCommentMission()">Start Mission</button>
+                    <p class="mission-desc">Bagikan pendapatmu dengan mengomentari video pertunjukan.</p>
+                    <span class="mission-xp">+5 XP</span>
+                    <button class="mission-btn" id="btnComment" onclick="startCommentMission()">Mulai Misi</button>
                 </div>
 
                 <div class="mission-card">
                     <div class="mission-header">
                         <span class="mission-icon">👥</span>
-                        <span class="mission-title">Follow a Peer</span>
+                        <span class="mission-title">Ikuti Teman</span>
                     </div>
-                    <p class="mission-desc">Connect with fellow STAGE students by following their profile.</p>
+                    <p class="mission-desc">Hubungi sesama siswa STAGE dengan mengikuti profil mereka.</p>
                     <span class="mission-xp">+5 XP</span>
-                    <button class="mission-btn" id="btnFollow" onclick="completeTask(5, this, 'btnFollow')">Start Mission</button>
+                    <button class="mission-btn" id="btnFollow" onclick="completeTask(5, this, 'btnFollow')">Mulai Misi</button>
                 </div>
 
                 <div class="mission-card">
                     <div class="mission-header">
                         <span class="mission-icon">🔔</span>
-                        <span class="mission-title">Daily Check-in</span>
+                        <span class="mission-title">Check-in Harian</span>
                     </div>
-                    <p class="mission-desc">Log in to STAGE today to maintain your streak!</p>
-                    <span class="mission-xp">+15 XP</span>
-                    <button class="mission-btn" id="btnDaily" onclick="completeTask(15, this, 'btnDaily')">Start Mission</button>
+                    <p class="mission-desc">Login ke STAGE hari ini untuk menjaga streak-mu!</p>
+                    <span class="mission-xp">+5 XP</span>
+                    <button class="mission-btn" id="btnDaily" onclick="completeTask(5, this, 'btnDaily')">Mulai Misi</button>
                 </div>
             </div>
         </div>
@@ -847,7 +913,7 @@
             <div class="leaderboard-container">
                 <div class="leaderboard-header">
                     <h2 class="leaderboard-title">🏆 Top Performers</h2>
-                    <span class="your-rank">Your Rank: #<span id="userRank">8</span></span>
+                    <span class="your-rank">Rank Kamu: #<span id="userRank">8</span></span>
                 </div>
                 <div class="leaderboard-list" id="leaderboardList"></div>
             </div>
@@ -858,29 +924,20 @@
     <div class="modal-overlay" id="quizModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal('quizModal')">&times;</button>
-            <h2 class="modal-title">📝 Stage Quiz</h2>
-            <p class="modal-desc">Test your knowledge about STAGE!</p>
+            <h2 class="modal-title">📝 Kuis STAGE</h2>
+            <p class="modal-desc">Uji pengetahuanmu tentang STAGE!</p>
             <div id="quizContainer">
                 <div class="quiz-question">
-                    <p class="quiz-question-text">1. What does STAGE stand for?</p>
+                    <p class="quiz-question-text">1. Apakah kepanjangan dari STAGE?</p>
                     <div class="quiz-options">
                         <button class="quiz-option" onclick="selectOption(this, false)">Sports and Technical Athletics Global Education</button>
-                        <button class="quiz-option" onclick="selectOption(this, true)">Study of Theatre Arts & Global Entertainment</button>
+                        <button class="quiz-option" onclick="selectOption(this, true)">Studio of Talent, Arts, & Global Entertainment</button>
                         <button class="quiz-option" onclick="selectOption(this, false)">Stage Training and Academic Great Education</button>
                         <button class="quiz-option" onclick="selectOption(this, false)">Strategic Theater Arts and General Excellence</button>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p class="quiz-question-text">2. Which department is STAGE under?</p>
-                    <div class="quiz-options">
-                        <button class="quiz-option" onclick="selectOption(this, false)">Computer Science</button>
-                        <button class="quiz-option" onclick="selectOption(this, true)">Production Media, Vocational Program</button>
-                        <button class="quiz-option" onclick="selectOption(this, false)">Business Administration</button>
-                        <button class="quiz-option" onclick="selectOption(this, false)">Engineering</button>
-                    </div>
-                </div>
-                <div class="quiz-question">
-                    <p class="quiz-question-text">3. What is the main focus of STAGE?</p>
+                    <p class="quiz-question-text">2. Apakah yang menjadi fokus utama STAGE?</p>
                     <div class="quiz-options">
                         <button class="quiz-option" onclick="selectOption(this, false)">Film Making</button>
                         <button class="quiz-option" onclick="selectOption(this, false)">Graphic Design</button>
@@ -889,29 +946,38 @@
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p class="quiz-question-text">4. Which university is STAGE part of?</p>
+                    <p class="quiz-question-text">3. Di universitas mana STAGE berada?</p>
                     <div class="quiz-options">
-                        <button class="quiz-option" onclick="selectOption(this, false)">University of Gadjah Mada</button>
-                        <button class="quiz-option" onclick="selectOption(this, false)">University of Brawijaya</button>
-                        <button class="quiz-option" onclick="selectOption(this, true)">University of Indonesia</button>
-                        <button class="quiz-option" onclick="selectOption(this, false)">University of Diponegoro</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Universitas Gadjah Mada</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Universitas Brawijaya</button>
+                        <button class="quiz-option" onclick="selectOption(this, true)">Universitas Indonesia</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Universitas Diponegoro</button>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p class="quiz-question-text">5. What career opportunities does STAGE provide?</p>
+                    <p class="quiz-question-text">4. STAGE berada di bawah department apa?</p>
+                    <div class="quiz-options">
+                        <button class="quiz-option" onclick="selectOption(this, false)">Ilmu Komputer</button>
+                        <button class="quiz-option" onclick="selectOption(this, true)">Production Media, Program Vokasi</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Administrasi Bisnis</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Teknik</button>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p class="quiz-question-text">5. Apa peluang karier yang disediakan STAGE?</p>
                     <div class="quiz-options">
                         <button class="quiz-option" onclick="selectOption(this, false)">Software Developer</button>
-                        <button class="quiz-option" onclick="selectOption(this, false)">Accountant</button>
+                        <button class="quiz-option" onclick="selectOption(this, false)">Akuntan</button>
                         <button class="quiz-option" onclick="selectOption(this, true)">Stage Manager, Actor, Director</button>
                         <button class="quiz-option" onclick="selectOption(this, false)">Data Scientist</button>
                     </div>
                 </div>
-                <button class="quiz-submit" onclick="submitQuiz()">Submit Answers</button>
+                <button class="quiz-submit" onclick="submitQuiz()">Kirim Jawaban</button>
             </div>
             <div class="quiz-result" id="quizResult" style="display: none;">
                 <div class="quiz-score"><span id="scoreDisplay">0</span>/5</div>
                 <p id="resultMessage">Keep trying!</p>
-                <button class="quiz-submit" onclick="resetQuiz()">Try Again</button>
+                <button class="quiz-submit" onclick="resetQuiz()">Coba Lagi</button>
             </div>
         </div>
     </div>
@@ -920,21 +986,21 @@
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal('uploadModal')">&times;</button>
-            <h2 class="modal-title">📹 Upload Your Talent</h2>
-            <p class="modal-desc">Upload a video showcasing your performance talent!</p>
+            <h2 class="modal-title">📹 Unggah Talentamu</h2>
+            <p class="modal-desc">Unggah video yang menampilkan talentamu!</p>
             
             <div class="upload-area" onclick="document.getElementById('videoInput').click()">
                 <div class="upload-icon">🎬</div>
-                <p class="upload-text">Click to upload your video</p>
-                <p class="upload-hint">MP4, MOV, or WebM up to 100MB</p>
+                <p class="upload-text">Klik untuk mengunggah video</p>
+                <p class="upload-hint">MP4, MOV, atau WebM hingga 100MB</p>
                 <input type="file" id="videoInput" accept="video/*" style="display: none" onchange="handleVideoUpload(event)">
             </div>
             
             <div class="upload-tips">
-                <h4>📌 Upload Tips:</h4>
+                <h4>📌 Tips Unggah:</h4>
                 <ul>
-                    <li>Choose a location with good lighting!</li>
-                    <li>Ensure there is no background noise!</li>
+                    <li>Pilih lokasi dengan pencahayaan yang baik!</li>
+                    <li>Pastikan tidak ada latar belakang noise!</li>
                 </ul>
             </div>
             
@@ -1040,7 +1106,7 @@
             // Update progress bar
             var progressBar = document.querySelector('.progress-fill');
             if (progressBar) {
-                var progress = Math.min((currentXP / 1000) * 100, 100);
+                var progress = Math.min((currentXP / 3000) * 100, 100);
                 progressBar.style.width = progress + '%';
             }
 
@@ -1048,18 +1114,28 @@
             var xpProgress = document.getElementById('xpProgress');
             if (xpProgress) xpProgress.textContent = currentXP;
 
-            // Update level text based on XP
+            // Update level text based on XP (New leveling system)
             var levelText = document.getElementById('levelText');
-            var nextLevelText = document.querySelector('.next-level-info');
-            if (currentXP >= 2000) {
-                if (levelText) levelText.textContent = 'Master Performer';
-                if (nextLevelText) nextLevelText.innerHTML = '<span>🎖️</span><span>You reached the highest level!</span>';
-            } else if (currentXP >= 1000) {
-                if (levelText) levelText.textContent = 'Intermediate Performer';
-                if (nextLevelText) nextLevelText.innerHTML = '<span>🎖️</span><span>Next Level: <strong>Master Performer</strong> (1000 XP more)</span>';
+            var nextLevelText = document.getElementById('nextLevelText');
+            
+            if (currentXP >= 3000) {
+                // Rising Star level
+                if (levelText) levelText.textContent = 'Rising Star';
+                if (nextLevelText) nextLevelText.innerHTML = '<span>⭐</span><span>_level Tertinggi!</span>';
+            } else if (currentXP >= 1001) {
+                // Performer level
+                if (levelText) levelText.textContent = 'Performer';
+                if (nextLevelText) {
+                    const xpToNext = 3000 - currentXP;
+                    nextLevelText.innerHTML = '<span>🎭</span><span>Next Level: <strong>Rising Star</strong> (' + xpToNext + ' XP lagi)</span>';
+                }
             } else {
+                // New Talent level
                 if (levelText) levelText.textContent = 'New Talent';
-                if (nextLevelText) nextLevelText.innerHTML = '<span>🎖️</span><span>Next Level: <strong>Intermediate Performer</strong> (1000 XP more)</span>';
+                if (nextLevelText) {
+                    const xpToNext = 1001 - currentXP;
+                    nextLevelText.innerHTML = '<span>🌟</span><span>Next Level: <strong>Performer</strong> (' + xpToNext + ' XP lagi)</span>';
+                }
             }
 
             // Update button states for completed missions
@@ -1142,18 +1218,24 @@
                 }
             });
             
+            // Proportional scoring: 60 XP per correct answer, max 300 XP (5 questions)
+            const xpPerCorrect = 60;
+            const xpEarned = correctCount * xpPerCorrect;
+            
             document.getElementById('quizContainer').style.display = 'none';
             document.getElementById('quizResult').style.display = 'block';
-            document.getElementById('scoreDisplay').textContent = correctCount;
+            document.getElementById('scoreDisplay').textContent = correctCount + '/5';
             
             let message = '';
             if (correctCount === 5) {
-                message = '🎉 Perfect! You earned 100 XP!';
-                addXP(100, 'btnQuiz');
+                message = '🎉 Sempurna! Kamu mendapat ' + xpEarned + ' XP!';
+                addXP(xpEarned, 'btnQuiz');
             } else if (correctCount >= 3) {
-                message = '👍 Good job! Try again for full XP!';
+                message = '👍 Bagus! Kamu mendapat ' + xpEarned + ' XP. Coba lagi untuk XP penuh!';
+                addXP(xpEarned, 'btnQuiz');
             } else {
-                message = '📚 Keep learning about STAGE!';
+                message = '📚 Tetap semangat! Kamu mendapat ' + xpEarned + ' XP. Pelajari lagi tentang STAGE!';
+                addXP(xpEarned, 'btnQuiz');
             }
             document.getElementById('resultMessage').textContent = message;
             syncUI();
@@ -1171,8 +1253,8 @@
         function handleVideoUpload(event) {
             const file = event.target.files[0];
             if (file) {
-                addXP(75, 'btnUpload');
-                showNotification('📹 Video uploaded! +75 XP');
+                addXP(100, 'btnUpload');
+                showNotification('📹 Video diunggah! +100 XP');
                 closeModal('uploadModal');
                 syncUI();
             }
@@ -1232,15 +1314,16 @@
         // Leaderboard rendering
         function renderLeaderboard() {
             var leaderboardData = [
-                { name: 'Ari Setiawan', xp: 850, level: 'Intermediate' },
-                { name: 'Siti Nurhaliza', xp: 720, level: 'Intermediate' },
-                { name: 'Budi Santoso', xp: 650, level: 'New Talent' },
-                { name: 'Dewi Lestari', xp: 580, level: 'New Talent' },
-                { name: 'Rudi Hermawan', xp: 520, level: 'New Talent' },
-                { name: 'Lisa Amelia', xp: 480, level: 'New Talent' },
+                { name: 'Putra Ramadhan', xp: 3250, level: 'Rising Star' },
+                { name: 'Ari Setiawan', xp: 2450, level: 'Performer' },
+                { name: 'Siti Nurhaliza', xp: 1850, level: 'Performer' },
+                { name: 'Budi Santoso', xp: 950, level: 'New Talent' },
+                { name: 'Dewi Lestari', xp: 780, level: 'New Talent' },
+                { name: 'Rudi Hermawan', xp: 650, level: 'New Talent' },
+                { name: 'Lisa Amelia', xp: 520, level: 'New Talent' },
                 { name: 'Joko Wijaya', xp: 420, level: 'New Talent' },
-                { name: 'You', xp: currentXP, level: currentXP >= 1000 ? 'Intermediate' : 'New Talent', isCurrentUser: true },
-                { name: 'Nina Hartati', xp: 180, level: 'New Talent' },
+                { name: 'You', xp: currentXP, level: currentXP >= 3000 ? 'Rising Star' : currentXP >= 1001 ? 'Performer' : 'New Talent', isCurrentUser: true },
+                { name: 'Nina Hartati', xp: 280, level: 'New Talent' },
                 { name: 'Doni Kusuma', xp: 95, level: 'New Talent' }
             ];
             
