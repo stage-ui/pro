@@ -30,6 +30,63 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Floating Musical Notes Decorations */
+        .float-note {
+            position: fixed;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.15);
+            animation: floatNote 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .float-note:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; font-size: 1.5rem; }
+        .float-note:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; font-size: 2rem; }
+        .float-note:nth-child(3) { top: 60%; left: 8%; animation-delay: 2s; font-size: 1.8rem; }
+        .float-note:nth-child(4) { top: 80%; right: 10%; animation-delay: 0.5s; font-size: 2.2rem; }
+        .float-note:nth-child(5) { top: 40%; left: 5%; animation-delay: 1.5s; font-size: 1.6rem; }
+        .float-note:nth-child(6) { top: 30%; right: 5%; animation-delay: 2.5s; font-size: 1.9rem; }
+
+        @keyframes floatNote {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.1; }
+            50% { transform: translateY(-20px) rotate(10deg); opacity: 0.25; }
+        }
+
+        /* Sparkle Stars */
+        .sparkle-star {
+            position: fixed;
+            font-size: 1.2rem;
+            color: var(--gold);
+            animation: sparkle 2s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .sparkle-star:nth-child(7) { top: 15%; left: 20%; animation-delay: 0s; }
+        .sparkle-star:nth-child(8) { top: 35%; right: 25%; animation-delay: 0.5s; }
+        .sparkle-star:nth-child(9) { top: 70%; left: 15%; animation-delay: 1s; }
+        .sparkle-star:nth-child(10) { top: 85%; right: 20%; animation-delay: 1.5s; }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 0.8; transform: scale(1.2); }
+        }
+
+        /* Spotlight effect */
+        .spotlight-glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .login-container {
@@ -200,35 +257,114 @@
             display: block;
         }
 
+        /* Signup Modal Styles */
+        .signup-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .signup-modal-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .signup-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .signup-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+
+        .signup-header p {
+            font-size: 0.95rem;
+            color: var(--white);
+            opacity: 0.8;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.8rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .close-modal:hover {
+            opacity: 1;
+        }
+
         @media (max-width: 480px) {
             .login-card {
                 padding: 35px 25px;
+            }
+            .signup-modal-content {
+                padding: 30px 20px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Decorative Elements -->
+    <span class="float-note">♪</span>
+    <span class="float-note">♫</span>
+    <span class="float-note">♬</span>
+    <span class="float-note">♩</span>
+    <span class="float-note">🎵</span>
+    <span class="float-note">🎶</span>
+    <span class="sparkle-star">✦</span>
+    <span class="sparkle-star">✦</span>
+    <span class="sparkle-star">✦</span>
+    <span class="sparkle-star">✦</span>
+    <div class="spotlight-glow"></div>
+    
     <div class="login-container">
         <div class="login-card">
             <div class="logo">
                 <img src="logo-stage.webp" alt="STAGE">
             </div>
             
-            <h1 class="login-title">Welcome Back</h1>
-            <p class="login-subtitle">Login to continue your STAGE journey</p>
+            <h1 class="login-title">Selamat Datang</h1>
+            <p class="login-subtitle">Login untuk melanjutkan perjalanan STAGE kamu</p>
             
             <form id="loginForm">
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" id="username" placeholder="Enter your username" required>
+                    <input type="text" id="username" placeholder="Masukkan username" required>
                 </div>
                 
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <input type="password" id="password" placeholder="Masukkan password" required>
                 </div>
                 
-                <p class="error-msg" id="errorMsg">Invalid username or password</p>
+                <p class="error-msg" id="errorMsg">Username atau password salah</p>
                 
                 <button type="submit" class="login-btn">Login</button>
             </form>
@@ -243,60 +379,277 @@
             </button>
             
             <p class="signup-link">
-                Don't have an account? <a href="#" onclick="showSignup()">Sign up</a>
+                Belum punya akun? <a href="#" onclick="showSignup()">Daftar</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="signup-modal">
+        <div class="signup-modal-content">
+            <div class="signup-header">
+                <h2>Buat Akun</h2>
+                <p>Bergabung dengan komunitas STAGE hari ini</p>
+                <button class="close-modal" onclick="closeSignup()">×</button>
+            </div>
+            
+            <form id="signupForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="signupName" placeholder="Masukkan nama lengkap" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="signupEmail" placeholder="Masukkan email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" placeholder="Buat password (min 8 karakter)" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" placeholder="Konfirmasi password" required>
+                </div>
+                
+                <p class="error-msg" id="signupError">Pesan error di sini</p>
+                
+                <button type="submit" class="login-btn">Daftar</button>
+            </form>
+            
+            <p class="signup-link">
+                Sudah punya akun? <a href="#" onclick="closeSignup()">Login</a>
             </p>
         </div>
     </div>
 
     <script>
+        // Initialize user database in localStorage
+        function initUserDatabase() {
+            if (!localStorage.getItem('userDatabase')) {
+                const defaultUsers = [
+                    {
+                        id: 1,
+                        username: 'Nemima Sinaga',
+                        email: 'nemima@stage.ui.ac.id',
+                        password: '123456',
+                        xp: 0,
+                        level: 'New Talent',
+                        joinDate: new Date().toISOString(),
+                        rewardsClaimed: 0,
+                        wishlist: []
+                    }
+                ];
+                localStorage.setItem('userDatabase', JSON.stringify(defaultUsers));
+            }
+        }
+
+        // Get all users from database
+        function getUsers() {
+            initUserDatabase();
+            return JSON.parse(localStorage.getItem('userDatabase'));
+        }
+
+        // Find user by username or email
+        function findUser(identifier) {
+            const users = getUsers();
+            return users.find(user => 
+                user.username.toLowerCase() === identifier.toLowerCase() || 
+                user.email.toLowerCase() === identifier.toLowerCase()
+            );
+        }
+
+        // Validate email format
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
         // Check if already logged in
         if (sessionStorage.getItem('userLoggedIn') === 'true') {
             window.location.href = 'index.html';
         }
 
+        // Initialize database on page load
+        initUserDatabase();
+
+        // Login form submission
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const errorMsg = document.getElementById('errorMsg');
             
-            // Simple validation - in real app, check against stored users
-            if (username.trim() === '') {
-                errorMsg.textContent = 'Please enter username';
+            // Validation
+            if (username === '') {
+                errorMsg.textContent = 'Silakan masukkan username atau email';
                 errorMsg.classList.add('show');
                 return;
             }
             
-            if (password.trim() === '') {
-                errorMsg.textContent = 'Please enter password';
+            if (password === '') {
+                errorMsg.textContent = 'Silakan masukkan password';
+                errorMsg.classList.add('show');
+                return;
+            }
+            
+            // Check if input is email and validate format
+            if (username.includes('@') && !isValidEmail(username)) {
+                errorMsg.textContent = 'Format email tidak valid';
+                errorMsg.classList.add('show');
+                return;
+            }
+            
+            // Find user in database
+            const user = findUser(username);
+            
+            if (!user) {
+                errorMsg.textContent = 'Akun tidak ditemukan. Silakan daftar terlebih dahulu.';
+                errorMsg.classList.add('show');
+                return;
+            }
+            
+            if (user.password !== password) {
+                errorMsg.textContent = 'Username atau password salah';
                 errorMsg.classList.add('show');
                 return;
             }
             
             // Login successful - store user info
             sessionStorage.setItem('userLoggedIn', 'true');
-            sessionStorage.setItem('username', username);
+            sessionStorage.setItem('username', user.username);
+            sessionStorage.setItem('userId', user.id);
+            sessionStorage.setItem('userEmail', user.email);
+            sessionStorage.setItem('userXP', user.xp);
+            sessionStorage.setItem('userLevel', user.level);
             sessionStorage.setItem('loginTime', new Date().toISOString());
             
             // Redirect to index
             window.location.href = 'index.html';
         });
 
+        // Google login simulation
         function loginWithGoogle() {
-            // Simulate Google login - in production, use Google OAuth
-            const username = 'Google User';
+            // For demo, create a Google user if not exists
+            const googleEmail = 'user@gmail.com';
+            let user = findUser(googleEmail);
+            
+            if (!user) {
+                // Create new Google user
+                const users = getUsers();
+                const newUser = {
+                    id: users.length + 1,
+                    username: 'Google User',
+                    email: googleEmail,
+                    password: 'google_auth_' + Math.random().toString(36).substring(7),
+                    xp: 0,
+                    level: 'New Talent',
+                    joinDate: new Date().toISOString(),
+                    rewardsClaimed: 0,
+                    wishlist: []
+                };
+                users.push(newUser);
+                localStorage.setItem('userDatabase', JSON.stringify(users));
+                user = newUser;
+            }
+            
+            // Login the user
             sessionStorage.setItem('userLoggedIn', 'true');
-            sessionStorage.setItem('username', username);
+            sessionStorage.setItem('username', user.username);
+            sessionStorage.setItem('userId', user.id);
+            sessionStorage.setItem('userEmail', user.email);
+            sessionStorage.setItem('userXP', user.xp);
+            sessionStorage.setItem('userLevel', user.level);
             sessionStorage.setItem('loginTime', new Date().toISOString());
             sessionStorage.setItem('loginMethod', 'google');
             
             window.location.href = 'index.html';
         }
 
+        // Show signup modal
         function showSignup() {
-            alert('Sign up feature coming soon! You can login with any username and password for now.');
+            document.getElementById('signupModal').style.display = 'flex';
         }
+
+        // Close signup modal
+        function closeSignup() {
+            document.getElementById('signupModal').style.display = 'none';
+        }
+
+        // Handle signup form submission
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const signupError = document.getElementById('signupError');
+            
+            // Validation
+            if (name === '') {
+                signupError.textContent = 'Silakan masukkan nama lengkap';
+                signupError.classList.add('show');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                signupError.textContent = 'Silakan masukkan email yang valid';
+                signupError.classList.add('show');
+                return;
+            }
+            
+            if (password.length < 8) {
+                signupError.textContent = 'Password minimal 8 karakter';
+                signupError.classList.add('show');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                signupError.textContent = 'Password tidak cocok';
+                signupError.classList.add('show');
+                return;
+            }
+            
+            // Check if user already exists
+            if (findUser(email) || findUser(name)) {
+                signupError.textContent = 'User dengan nama atau email ini sudah ada';
+                signupError.classList.add('show');
+                return;
+            }
+            
+            // Create new user
+            const users = getUsers();
+            const newUser = {
+                id: users.length + 1,
+                username: name,
+                email: email,
+                password: password,
+                xp: 0,
+                level: 'New Talent',
+                joinDate: new Date().toISOString(),
+                rewardsClaimed: 0,
+                wishlist: []
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('userDatabase', JSON.stringify(users));
+            
+            // Auto login after signup
+            sessionStorage.setItem('userLoggedIn', 'true');
+            sessionStorage.setItem('username', newUser.username);
+            sessionStorage.setItem('userId', newUser.id);
+            sessionStorage.setItem('userEmail', newUser.email);
+            sessionStorage.setItem('userXP', newUser.xp);
+            sessionStorage.setItem('userLevel', newUser.level);
+            sessionStorage.setItem('loginTime', new Date().toISOString());
+            
+            // Redirect to index
+            window.location.href = 'index.html';
+        });
     </script>
 </body>
 </html>
